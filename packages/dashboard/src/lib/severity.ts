@@ -28,6 +28,15 @@ const TONES: Record<string, SeverityTone> = {
 };
 
 export function severityTone(category: string | undefined): SeverityTone {
-  if (!category) return NEUTRAL;
-  return TONES[category.toLowerCase().replaceAll(" ", "_").replaceAll("-", "_")] ?? NEUTRAL;
+  return matchSeverityTone(category) ?? NEUTRAL;
+}
+
+/**
+ * Like severityTone but returns undefined for unrecognised values — lets
+ * generic renderers (e.g. UnitsTable) upgrade severity-looking strings to
+ * pills while leaving all other values as plain text.
+ */
+export function matchSeverityTone(value: string | undefined): SeverityTone | undefined {
+  if (!value) return undefined;
+  return TONES[value.toLowerCase().replaceAll(" ", "_").replaceAll("-", "_")];
 }

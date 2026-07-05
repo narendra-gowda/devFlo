@@ -47,7 +47,7 @@ function AlertDetail({ repo }: { repo: RepoAlerts }) {
             <thead className="border-b border-edge text-left text-[10.5px] font-semibold uppercase tracking-[.07em] text-dim">
               <tr>
                 <th className="px-3 py-2">Package</th>
-                <th className="px-3 py-2">Severity</th>
+                <th className="px-3 py-2 text-center">Severity</th>
                 <th className="px-3 py-2">Affected version</th>
                 <th className="px-3 py-2">Fix version</th>
                 <th className="px-3 py-2">CVE</th>
@@ -57,7 +57,7 @@ function AlertDetail({ repo }: { repo: RepoAlerts }) {
               {repo.dependabot.map((a, i) => (
                 <tr key={`${a.package}-${a.cveId ?? i}`}>
                   <td className="px-3 py-2 font-mono text-ink">{a.package}</td>
-                  <td className="px-3 py-2"><SeverityBadge severity={a.severity} /></td>
+                  <td className="px-3 py-2 text-center"><SeverityBadge severity={a.severity} /></td>
                   <td className="px-3 py-2 font-mono text-xs text-ink/80">{a.affectedRange}</td>
                   <td className="px-3 py-2 font-mono text-xs text-ink/80">
                     {a.fixVersion ?? <span className="italic text-dim">no fix yet</span>}
@@ -142,7 +142,7 @@ function GroupSection({ title, repos }: { title: string; repos: RepoAlerts[] }) 
               ))}
               <th className={thCenter}>Code scanning</th>
               <th className={thCenter}>Total</th>
-              <th className={thBase}>Link</th>
+              <th className={thCenter}>Link</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-edge/60">
@@ -182,7 +182,7 @@ function GroupSection({ title, repos }: { title: string; repos: RepoAlerts[] }) 
                       <td className="px-3 py-2.5 text-center tabular-nums">
                         {total > 0 ? <span className="font-semibold text-ink">{total}</span> : <span className="text-ok">0</span>}
                       </td>
-                      <td className="px-3 py-2.5" onClick={(e) => e.stopPropagation()}>
+                      <td className="px-3 py-2.5 text-center" onClick={(e) => e.stopPropagation()}>
                         <a
                           href={r.securityUrl}
                           target="_blank"

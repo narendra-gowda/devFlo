@@ -49,7 +49,7 @@ function AgeChip({ item }: { item: CampaignItem }) {
 
 function LinkCell({ item }: { item: CampaignItem }) {
   return (
-    <div className="flex gap-3 text-xs">
+    <div className="flex justify-center gap-3 text-xs">
       {item.prUrl ? (
         <a href={item.prUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-0.5 text-accent2 hover:underline">
           PR <ExternalLink className="h-3 w-3" />
@@ -123,9 +123,9 @@ function UnitCountsTable({ campaign, items }: { campaign: CampaignManifest; item
               <th key={c} className={thCenter}>{c.replaceAll("_", " ")}</th>
             ))}
             <th className={thCenter}>Total</th>
-            <th className={thBase}>Status</th>
-            <th className={thBase} title="Days in current status">Age</th>
-            <th className={thBase}>Links</th>
+            <th className={thCenter}>Status</th>
+            <th className={thCenter} title="Days in current status">Age</th>
+            <th className={thCenter}>Links</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-edge/60">
@@ -157,8 +157,8 @@ function UnitCountsTable({ campaign, items }: { campaign: CampaignManifest; item
                       );
                     })}
                     <td className="px-3 py-2.5 text-center font-semibold tabular-nums text-ink">{total}</td>
-                    <td className="px-3 py-2.5"><ItemStatusBadge status={item.status} /></td>
-                    <td className="px-3 py-2.5"><AgeChip item={item} /></td>
+                    <td className="px-3 py-2.5 text-center"><ItemStatusBadge status={item.status} /></td>
+                    <td className="px-3 py-2.5 text-center"><AgeChip item={item} /></td>
                     <td className="whitespace-nowrap px-3 py-2.5" onClick={(e) => e.stopPropagation()}>
                       <LinkCell item={item} />
                     </td>
@@ -201,10 +201,10 @@ function PlainItemsTable({ campaign, items }: { campaign: CampaignManifest; item
             <th className="w-8 px-2 py-2" />
             <th className={thBase.replace("px-4", "px-2")}>Repo</th>
             <th className={thBase}>Change</th>
-            <th className={thBase}>Strategy</th>
-            <th className={thBase}>Status</th>
-            <th className={thBase} title="Days in current status">Age</th>
-            <th className={thBase}>Links</th>
+            <th className={thCenter}>Strategy</th>
+            <th className={thCenter}>Status</th>
+            <th className={thCenter} title="Days in current status">Age</th>
+            <th className={thCenter}>Links</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-edge/60">
@@ -227,9 +227,9 @@ function PlainItemsTable({ campaign, items }: { campaign: CampaignManifest; item
                       {attention && <AlertTriangle className="mr-1 inline h-4 w-4 text-danger" />}
                       {item.description}
                     </td>
-                    <td className="px-3 py-2.5"><StrategyBadge strategy={item.strategy} /></td>
-                    <td className="px-3 py-2.5"><ItemStatusBadge status={item.status} /></td>
-                    <td className="px-3 py-2.5"><AgeChip item={item} /></td>
+                    <td className="px-3 py-2.5 text-center"><StrategyBadge strategy={item.strategy} /></td>
+                    <td className="px-3 py-2.5 text-center"><ItemStatusBadge status={item.status} /></td>
+                    <td className="px-3 py-2.5 text-center"><AgeChip item={item} /></td>
                     <td className="whitespace-nowrap px-3 py-2.5" onClick={(e) => e.stopPropagation()}>
                       <LinkCell item={item} />
                     </td>
