@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "1.1",
+  "campaignId": "camp-july-wave-1-2026-07-04-wd5i",
+  "campaignType": "npm-dependabot",
+  "title": "July wave 1",
+  "createdAt": "2026-07-04T21:05:36.260Z",
+  "updatedAt": "2026-07-04T21:05:36.260Z",
+  "status": "DRAFT",
+  "owner": "platform-team",
+  "items": [
+    {
+      "itemId": "camp-july-wave-1-2026-07-04-wd5i-item-001",
+      "repo": "payments-api",
+      "org": "acme-core",
+      "description": "Draft — to be populated by npm-dependabot adapter detect()/plan()",
+      "strategy": "MANUAL_REVIEW",
+      "status": "PENDING_APPROVAL",
+      "statusUpdatedAt": "2026-07-04T21:05:36.260Z",
+      "metadata": {
+        "source": "dashboard-create",
+        "config": {}
+      }
+    },
+    {
+      "itemId": "camp-july-wave-1-2026-07-04-wd5i-item-002",
+      "repo": "payments-worker",
+      "org": "acme-core",
+      "description": "Draft — to be populated by npm-dependabot adapter detect()/plan()",
+      "strategy": "MANUAL_REVIEW",
+      "status": "PENDING_APPROVAL",
+      "statusUpdatedAt": "2026-07-04T21:05:36.260Z",
+      "metadata": {
+        "source": "dashboard-create",
+        "config": {}
+      }
+    }
+  ]
+}

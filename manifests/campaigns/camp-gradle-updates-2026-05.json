@@ -1,0 +1,106 @@
+{
+  "schemaVersion": "1.1",
+  "campaignId": "camp-gradle-updates-2026-05",
+  "campaignType": "gradle-dependency-update",
+  "title": "Gradle toolchain refresh — AGP 8.7, Kotlin 2.0.21, wrapper 8.10",
+  "createdAt": "2026-05-18T10:00:00Z",
+  "updatedAt": "2026-06-05T13:25:00Z",
+  "status": "COMPLETED",
+  "owner": "mobile-team",
+  "items": [
+    {
+      "itemId": "gradle-001",
+      "repo": "android-shell",
+      "org": "acme-mobile",
+      "description": "Bump Android Gradle Plugin 8.5.2 -> 8.7.1",
+      "issueKey": "agp-8.7.1",
+      "issueLabel": "Android Gradle Plugin 8.7.1",
+      "strategy": "AUTO_FIX",
+      "status": "MERGED",
+      "statusUpdatedAt": "2026-05-27T16:40:00Z",
+      "prUrl": "https://github.com/acme-mobile/android-shell/pull/89",
+      "adoTicketUrl": "https://dev.azure.com/acme/Mobile/_workitems/edit/47110",
+      "metadata": {
+        "group": "com.android.tools.build",
+        "artifact": "gradle",
+        "fromVersion": "8.5.2",
+        "toVersion": "8.7.1",
+        "file": "build.gradle"
+      }
+    },
+    {
+      "itemId": "gradle-002",
+      "repo": "android-shell",
+      "org": "acme-mobile",
+      "description": "Bump Kotlin 2.0.0 -> 2.0.21",
+      "issueKey": "kotlin-2.0.21",
+      "issueLabel": "Kotlin 2.0.21",
+      "strategy": "AUTO_FIX",
+      "status": "MERGED",
+      "statusUpdatedAt": "2026-05-29T11:00:00Z",
+      "prUrl": "https://github.com/acme-mobile/android-shell/pull/91",
+      "adoTicketUrl": "https://dev.azure.com/acme/Mobile/_workitems/edit/47111",
+      "metadata": {
+        "group": "org.jetbrains.kotlin",
+        "artifact": "kotlin-gradle-plugin",
+        "fromVersion": "2.0.0",
+        "toVersion": "2.0.21",
+        "file": "build.gradle"
+      }
+    },
+    {
+      "itemId": "gradle-003",
+      "repo": "rn-customer-app",
+      "org": "acme-mobile",
+      "description": "Bump Gradle wrapper 8.8 -> 8.10.2",
+      "issueKey": "gradle-wrapper-8.10.2",
+      "issueLabel": "Gradle wrapper 8.10.2",
+      "strategy": "AUTO_FIX",
+      "status": "MERGED",
+      "statusUpdatedAt": "2026-06-02T09:30:00Z",
+      "prUrl": "https://github.com/acme-mobile/rn-customer-app/pull/305",
+      "adoTicketUrl": "https://dev.azure.com/acme/Mobile/_workitems/edit/47112",
+      "metadata": {
+        "fromVersion": "8.8",
+        "toVersion": "8.10.2",
+        "file": "android/gradle/wrapper/gradle-wrapper.properties"
+      }
+    },
+    {
+      "itemId": "gradle-004",
+      "repo": "rn-driver-app",
+      "org": "acme-mobile",
+      "description": "Bump Gradle wrapper 8.8 -> 8.10.2",
+      "issueKey": "gradle-wrapper-8.10.2",
+      "issueLabel": "Gradle wrapper 8.10.2",
+      "strategy": "AUTO_FIX",
+      "status": "MERGED",
+      "statusUpdatedAt": "2026-06-05T13:25:00Z",
+      "prUrl": "https://github.com/acme-mobile/rn-driver-app/pull/212",
+      "adoTicketUrl": "https://dev.azure.com/acme/Mobile/_workitems/edit/47113",
+      "metadata": {
+        "fromVersion": "8.8",
+        "toVersion": "8.10.2",
+        "file": "android/gradle/wrapper/gradle-wrapper.properties"
+      }
+    },
+    {
+      "itemId": "gradle-005",
+      "repo": "rn-driver-app",
+      "org": "acme-mobile",
+      "description": "okhttp 4.9.2 pinned by React Native — defer until RN 0.76 upgrade",
+      "issueKey": "okhttp-4.12",
+      "issueLabel": "okhttp 4.12.x",
+      "strategy": "MANUAL_REVIEW",
+      "status": "SKIPPED",
+      "statusUpdatedAt": "2026-05-30T15:00:00Z",
+      "adoTicketUrl": "https://dev.azure.com/acme/Mobile/_workitems/edit/47114",
+      "metadata": {
+        "group": "com.squareup.okhttp3",
+        "artifact": "okhttp",
+        "fromVersion": "4.9.2",
+        "skipReason": "Version pinned by react-native 0.74; superseded by camp-rn-upgrade-0.76"
+      }
+    }
+  ]
+}

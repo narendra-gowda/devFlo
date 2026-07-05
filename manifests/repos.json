@@ -1,0 +1,16 @@
+{
+  "repos": [
+    { "repo": "payments-api", "org": "acme-core", "team": "payments-team" },
+    { "repo": "payments-worker", "org": "acme-core", "team": "payments-team" },
+    { "repo": "checkout-web", "org": "acme-core", "team": "payments-team" },
+    { "repo": "identity-service", "org": "acme-platform", "team": "platform-team" },
+    { "repo": "api-gateway", "org": "acme-platform", "team": "platform-team" },
+    { "repo": "notifications-service", "org": "acme-platform", "team": "platform-team" },
+    { "repo": "devflo-cli", "org": "acme-platform", "team": "platform-team" },
+    { "repo": "android-shell", "org": "acme-mobile", "team": "mobile-team" },
+    { "repo": "rn-customer-app", "org": "acme-mobile", "team": "mobile-team" },
+    { "repo": "rn-driver-app", "org": "acme-mobile", "team": "mobile-team" },
+    { "repo": "karate-e2e-suite", "org": "acme-labs", "team": "platform-team" },
+    { "repo": "data-export-service", "org": "acme-labs", "team": "payments-team" }
+  ]
+}

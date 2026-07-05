@@ -1,0 +1,56 @@
+{
+  "schemaVersion": "1.1",
+  "campaignId": "camp-rn-upgrade-0.76",
+  "campaignType": "react-native-upgrade",
+  "title": "React Native 0.74 -> 0.76 (new architecture default)",
+  "createdAt": "2026-07-01T08:30:00Z",
+  "updatedAt": "2026-07-01T08:30:00Z",
+  "status": "DRAFT",
+  "owner": "mobile-team",
+  "items": [
+    {
+      "itemId": "rn076-001",
+      "repo": "rn-customer-app",
+      "org": "acme-mobile",
+      "description": "Upgrade react-native 0.74.3 -> 0.76.5 (new arch, gradle + podfile changes)",
+      "issueKey": "react-native-0.76",
+      "issueLabel": "React Native 0.76 upgrade",
+      "strategy": "MANUAL_REVIEW",
+      "status": "PENDING_APPROVAL",
+      "statusUpdatedAt": "2026-07-01T08:30:00Z",
+      "adoTicketUrl": "https://dev.azure.com/acme/Mobile/_workitems/edit/48501",
+      "metadata": {
+        "fromVersion": "0.74.3",
+        "toVersion": "0.76.5",
+        "newArchitecture": true,
+        "breakingChanges": [
+          "Bridgeless mode default",
+          "Minimum iOS 15.1 / Android SDK 24",
+          "3 native modules need codegen migration"
+        ]
+      }
+    },
+    {
+      "itemId": "rn076-002",
+      "repo": "rn-driver-app",
+      "org": "acme-mobile",
+      "description": "Upgrade react-native 0.74.3 -> 0.76.5 (new arch, gradle + podfile changes)",
+      "issueKey": "react-native-0.76",
+      "issueLabel": "React Native 0.76 upgrade",
+      "strategy": "MANUAL_REVIEW",
+      "status": "PENDING_APPROVAL",
+      "statusUpdatedAt": "2026-07-01T08:30:00Z",
+      "adoTicketUrl": "https://dev.azure.com/acme/Mobile/_workitems/edit/48502",
+      "metadata": {
+        "fromVersion": "0.74.3",
+        "toVersion": "0.76.5",
+        "newArchitecture": true,
+        "breakingChanges": [
+          "Bridgeless mode default",
+          "Minimum iOS 15.1 / Android SDK 24",
+          "1 native module needs codegen migration"
+        ]
+      }
+    }
+  ]
+}

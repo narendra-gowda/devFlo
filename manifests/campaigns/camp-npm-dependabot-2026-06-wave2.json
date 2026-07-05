@@ -1,0 +1,376 @@
+{
+  "schemaVersion": "1.1",
+  "campaignId": "camp-npm-dependabot-2026-06-wave2",
+  "campaignType": "npm-dependabot",
+  "title": "Dependabot criticals — June wave 2 (undici, semver, lodash, jsonwebtoken, axios, ws, tmp)",
+  "createdAt": "2026-06-22T09:00:00Z",
+  "updatedAt": "2026-07-03T16:42:00Z",
+  "status": "IN_PROGRESS",
+  "owner": "platform-team",
+  "unitCategories": ["CRITICAL", "HIGH", "MODERATE", "LOW", "CODE_SCANNING"],
+  "items": [
+    {
+      "itemId": "npm-w2-payments-api",
+      "repo": "payments-api",
+      "org": "acme-core",
+      "description": "Security fix PR: 3 packages (undici, semver, tmp) — blocked on semver major bump approval",
+      "strategy": "MANUAL_REVIEW",
+      "status": "PENDING_APPROVAL",
+      "statusUpdatedAt": "2026-06-22T09:00:00Z",
+      "adoTicketUrl": "https://dev.azure.com/acme/Payments/_workitems/edit/48311",
+      "units": [
+        {
+          "key": "undici",
+          "label": "undici (CVE-2026-30144)",
+          "category": "CRITICAL",
+          "metadata": {
+            "package": "undici",
+            "fromVersion": "6.19.8",
+            "toVersion": "6.21.4",
+            "severity": "critical",
+            "directDependency": true,
+            "advisory": "https://github.com/advisories/GHSA-c7q9-xx44-qp2f"
+          }
+        },
+        {
+          "key": "semver",
+          "label": "semver ReDoS (CVE-2026-27893)",
+          "category": "HIGH",
+          "metadata": {
+            "package": "semver",
+            "fromVersion": "6.3.0",
+            "toVersion": "7.6.3",
+            "severity": "high",
+            "directDependency": true,
+            "advisory": "https://github.com/advisories/GHSA-hh8p-fx2q-jr9v"
+          }
+        },
+        {
+          "key": "tmp",
+          "label": "tmp symlink write (CVE-2026-21329)",
+          "category": "LOW",
+          "metadata": {
+            "package": "tmp",
+            "fromVersion": "0.2.1",
+            "toVersion": "0.2.5",
+            "severity": "low",
+            "directDependency": false,
+            "advisory": "https://github.com/advisories/GHSA-52f5-9888-hmc6"
+          }
+        }
+      ],
+      "metadata": {
+        "approvalBlocker": "semver 6 -> 7 is a major bump: drops callable module export; 4 call sites in src/version-gate.ts"
+      }
+    },
+    {
+      "itemId": "npm-w2-payments-worker",
+      "repo": "payments-worker",
+      "org": "acme-core",
+      "description": "Security fix PR: 1 package (undici)",
+      "strategy": "AUTO_FIX",
+      "status": "MERGED",
+      "statusUpdatedAt": "2026-06-26T09:05:00Z",
+      "prUrl": "https://github.com/acme-core/payments-worker/pull/198",
+      "adoTicketUrl": "https://dev.azure.com/acme/Platform/_workitems/edit/48214",
+      "units": [
+        {
+          "key": "undici",
+          "label": "undici (CVE-2026-30144)",
+          "category": "CRITICAL",
+          "metadata": {
+            "package": "undici",
+            "fromVersion": "6.18.2",
+            "toVersion": "6.21.4",
+            "severity": "critical",
+            "directDependency": true,
+            "advisory": "https://github.com/advisories/GHSA-c7q9-xx44-qp2f"
+          }
+        }
+      ],
+      "metadata": {}
+    },
+    {
+      "itemId": "npm-w2-api-gateway",
+      "repo": "api-gateway",
+      "org": "acme-platform",
+      "description": "Security fix PR: 2 packages (undici, ws)",
+      "strategy": "AUTO_FIX",
+      "status": "PR_RAISED",
+      "statusUpdatedAt": "2026-07-02T14:30:00Z",
+      "prUrl": "https://github.com/acme-platform/api-gateway/pull/731",
+      "adoTicketUrl": "https://dev.azure.com/acme/Platform/_workitems/edit/48215",
+      "units": [
+        {
+          "key": "undici",
+          "label": "undici (CVE-2026-30144)",
+          "category": "CRITICAL",
+          "metadata": {
+            "package": "undici",
+            "fromVersion": "6.20.0",
+            "toVersion": "6.21.4",
+            "severity": "critical",
+            "directDependency": true,
+            "advisory": "https://github.com/advisories/GHSA-c7q9-xx44-qp2f"
+          }
+        },
+        {
+          "key": "ws",
+          "label": "ws DoS (CVE-2026-29466)",
+          "category": "MODERATE",
+          "metadata": {
+            "package": "ws",
+            "fromVersion": "8.16.0",
+            "toVersion": "8.18.1",
+            "severity": "moderate",
+            "directDependency": true,
+            "advisory": "https://github.com/advisories/GHSA-3h5v-q93c-6h6q"
+          }
+        }
+      ],
+      "metadata": {}
+    },
+    {
+      "itemId": "npm-w2-identity-service",
+      "repo": "identity-service",
+      "org": "acme-platform",
+      "description": "Security fix PR: 2 packages (undici, jsonwebtoken) + 1 code-scanning finding",
+      "strategy": "AUTO_FIX",
+      "status": "TESTS_FAILED",
+      "statusUpdatedAt": "2026-07-01T18:12:00Z",
+      "prUrl": "https://github.com/acme-platform/identity-service/pull/244",
+      "adoTicketUrl": "https://dev.azure.com/acme/Platform/_workitems/edit/48216",
+      "units": [
+        {
+          "key": "undici",
+          "label": "undici (CVE-2026-30144)",
+          "category": "CRITICAL",
+          "metadata": {
+            "package": "undici",
+            "fromVersion": "6.17.0",
+            "toVersion": "6.21.4",
+            "severity": "critical",
+            "directDependency": true,
+            "advisory": "https://github.com/advisories/GHSA-c7q9-xx44-qp2f"
+          }
+        },
+        {
+          "key": "jsonwebtoken",
+          "label": "jsonwebtoken alg confusion (CVE-2026-24842)",
+          "category": "CRITICAL",
+          "metadata": {
+            "package": "jsonwebtoken",
+            "fromVersion": "9.0.1",
+            "toVersion": "9.0.3",
+            "severity": "critical",
+            "directDependency": true,
+            "advisory": "https://github.com/advisories/GHSA-8qff-qr5q-5pr8"
+          }
+        },
+        {
+          "key": "js/sql-injection",
+          "label": "CodeQL: SQL injection (js/sql-injection)",
+          "category": "CODE_SCANNING",
+          "metadata": {
+            "rule": "js/sql-injection",
+            "tool": "CodeQL",
+            "path": "src/db/session-store.ts:88",
+            "severity": "high",
+            "advisory": "https://codeql.github.com/codeql-query-help/javascript/js-sql-injection/"
+          }
+        }
+      ],
+      "metadata": {
+        "failingSuite": "integration/token-refresh.spec.ts",
+        "failureSummary": "3 tests failing: mock agent API changed between undici 6.17 and 6.21"
+      }
+    },
+    {
+      "itemId": "npm-w2-checkout-web",
+      "repo": "checkout-web",
+      "org": "acme-core",
+      "description": "Security fix PR: 3 packages (semver, axios, ws)",
+      "strategy": "AUTO_FIX",
+      "status": "PR_RAISED",
+      "statusUpdatedAt": "2026-07-03T10:02:00Z",
+      "prUrl": "https://github.com/acme-core/checkout-web/pull/523",
+      "adoTicketUrl": "https://dev.azure.com/acme/Payments/_workitems/edit/48310",
+      "units": [
+        {
+          "key": "semver",
+          "label": "semver ReDoS (CVE-2026-27893)",
+          "category": "HIGH",
+          "metadata": {
+            "package": "semver",
+            "fromVersion": "6.3.0",
+            "toVersion": "7.6.3",
+            "severity": "high",
+            "directDependency": false,
+            "advisory": "https://github.com/advisories/GHSA-hh8p-fx2q-jr9v"
+          }
+        },
+        {
+          "key": "axios",
+          "label": "axios SSRF (CVE-2026-28430)",
+          "category": "HIGH",
+          "metadata": {
+            "package": "axios",
+            "fromVersion": "1.6.8",
+            "toVersion": "1.8.2",
+            "severity": "high",
+            "directDependency": true,
+            "advisory": "https://github.com/advisories/GHSA-jwcz-9h9m-3xr3"
+          }
+        },
+        {
+          "key": "ws",
+          "label": "ws DoS (CVE-2026-29466)",
+          "category": "MODERATE",
+          "metadata": {
+            "package": "ws",
+            "fromVersion": "8.13.0",
+            "toVersion": "8.18.1",
+            "severity": "moderate",
+            "directDependency": false,
+            "advisory": "https://github.com/advisories/GHSA-3h5v-q93c-6h6q"
+          }
+        }
+      ],
+      "metadata": {}
+    },
+    {
+      "itemId": "npm-w2-notifications-service",
+      "repo": "notifications-service",
+      "org": "acme-platform",
+      "description": "Security fix PR: 1 package (lodash)",
+      "strategy": "AUTO_FIX",
+      "status": "MERGED",
+      "statusUpdatedAt": "2026-06-30T08:44:00Z",
+      "prUrl": "https://github.com/acme-platform/notifications-service/pull/167",
+      "adoTicketUrl": "https://dev.azure.com/acme/Platform/_workitems/edit/48217",
+      "units": [
+        {
+          "key": "lodash",
+          "label": "lodash prototype pollution (CVE-2026-31021)",
+          "category": "HIGH",
+          "metadata": {
+            "package": "lodash",
+            "fromVersion": "4.17.20",
+            "toVersion": "4.17.23",
+            "severity": "high",
+            "directDependency": true,
+            "advisory": "https://github.com/advisories/GHSA-p6mc-m9q3-9v5f"
+          }
+        }
+      ],
+      "metadata": {}
+    },
+    {
+      "itemId": "npm-w2-data-export-service",
+      "repo": "data-export-service",
+      "org": "acme-labs",
+      "description": "Security fix PR: 2 packages (lodash, tmp) — blocked by peer dependency conflict",
+      "strategy": "MANUAL_REVIEW",
+      "status": "NEEDS_ATTENTION",
+      "statusUpdatedAt": "2026-07-02T12:00:00Z",
+      "adoTicketUrl": "https://dev.azure.com/acme/Payments/_workitems/edit/48312",
+      "units": [
+        {
+          "key": "lodash",
+          "label": "lodash prototype pollution (CVE-2026-31021)",
+          "category": "HIGH",
+          "metadata": {
+            "package": "lodash",
+            "fromVersion": "4.17.19",
+            "toVersion": "4.17.23",
+            "severity": "high",
+            "directDependency": true,
+            "advisory": "https://github.com/advisories/GHSA-p6mc-m9q3-9v5f"
+          }
+        },
+        {
+          "key": "tmp",
+          "label": "tmp symlink write (CVE-2026-21329)",
+          "category": "LOW",
+          "metadata": {
+            "package": "tmp",
+            "fromVersion": "0.2.1",
+            "toVersion": "0.2.5",
+            "severity": "low",
+            "directDependency": false,
+            "advisory": "https://github.com/advisories/GHSA-52f5-9888-hmc6"
+          }
+        }
+      ],
+      "metadata": {
+        "blocker": "legacy-etl-lib pins lodash@4.17.19 as peer dep; owner team unresponsive"
+      }
+    },
+    {
+      "itemId": "npm-w2-devflo-cli",
+      "repo": "devflo-cli",
+      "org": "acme-platform",
+      "description": "Security fix PR: 2 packages (jsonwebtoken, tmp)",
+      "strategy": "AUTO_FIX",
+      "status": "IN_PROGRESS",
+      "statusUpdatedAt": "2026-07-04T07:55:00Z",
+      "adoTicketUrl": "https://dev.azure.com/acme/Platform/_workitems/edit/48218",
+      "units": [
+        {
+          "key": "jsonwebtoken",
+          "label": "jsonwebtoken alg confusion (CVE-2026-24842)",
+          "category": "CRITICAL",
+          "metadata": {
+            "package": "jsonwebtoken",
+            "fromVersion": "9.0.0",
+            "toVersion": "9.0.3",
+            "severity": "critical",
+            "directDependency": true,
+            "advisory": "https://github.com/advisories/GHSA-8qff-qr5q-5pr8"
+          }
+        },
+        {
+          "key": "tmp",
+          "label": "tmp symlink write (CVE-2026-21329)",
+          "category": "LOW",
+          "metadata": {
+            "package": "tmp",
+            "fromVersion": "0.2.3",
+            "toVersion": "0.2.5",
+            "severity": "low",
+            "directDependency": true,
+            "advisory": "https://github.com/advisories/GHSA-52f5-9888-hmc6"
+          }
+        }
+      ],
+      "metadata": {}
+    },
+    {
+      "itemId": "npm-w2-karate-e2e-suite",
+      "repo": "karate-e2e-suite",
+      "org": "acme-labs",
+      "description": "lodash 4.17.15 (devDependency only — not exploitable in this context)",
+      "strategy": "MANUAL_REVIEW",
+      "status": "SKIPPED",
+      "statusUpdatedAt": "2026-06-24T10:15:00Z",
+      "adoTicketUrl": "https://dev.azure.com/acme/Platform/_workitems/edit/48220",
+      "units": [
+        {
+          "key": "lodash",
+          "label": "lodash prototype pollution (CVE-2026-31021)",
+          "category": "HIGH",
+          "metadata": {
+            "package": "lodash",
+            "fromVersion": "4.17.15",
+            "severity": "high",
+            "directDependency": false,
+            "advisory": "https://github.com/advisories/GHSA-p6mc-m9q3-9v5f"
+          }
+        }
+      ],
+      "metadata": {
+        "skipReason": "devDependency of test tooling only; suppressed in GHAS with security team sign-off"
+      }
+    }
+  ]
+}

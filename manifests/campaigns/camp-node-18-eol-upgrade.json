@@ -1,0 +1,126 @@
+{
+  "schemaVersion": "1.1",
+  "campaignId": "camp-node-18-eol-upgrade",
+  "campaignType": "node-version-upgrade",
+  "title": "Node.js 18 EOL — upgrade all services to Node 20 LTS",
+  "createdAt": "2026-06-28T14:00:00Z",
+  "updatedAt": "2026-07-02T09:10:00Z",
+  "status": "AWAITING_APPROVAL",
+  "owner": "platform-team",
+  "items": [
+    {
+      "itemId": "node20-001",
+      "repo": "identity-service",
+      "org": "acme-platform",
+      "description": "Upgrade Node 18.20.4 -> 20.19.2 (engines, Dockerfile, CI matrix)",
+      "issueKey": "node-18-eol",
+      "issueLabel": "Node.js 18 EOL → 20 LTS",
+      "strategy": "MANUAL_REVIEW",
+      "status": "APPROVED",
+      "statusUpdatedAt": "2026-07-02T09:10:00Z",
+      "adoTicketUrl": "https://dev.azure.com/acme/Platform/_workitems/edit/48401",
+      "metadata": {
+        "currentVersion": "18.20.4",
+        "targetVersion": "20.19.2",
+        "dockerBaseImage": "node:20.19.2-alpine",
+        "ciWorkflow": ".github/workflows/ci.yml",
+        "enginesField": ">=20.0.0"
+      }
+    },
+    {
+      "itemId": "node20-002",
+      "repo": "api-gateway",
+      "org": "acme-platform",
+      "description": "Upgrade Node 18.20.4 -> 20.19.2 (engines, Dockerfile, CI matrix)",
+      "issueKey": "node-18-eol",
+      "issueLabel": "Node.js 18 EOL → 20 LTS",
+      "strategy": "MANUAL_REVIEW",
+      "status": "APPROVED",
+      "statusUpdatedAt": "2026-07-02T09:10:00Z",
+      "adoTicketUrl": "https://dev.azure.com/acme/Platform/_workitems/edit/48402",
+      "metadata": {
+        "currentVersion": "18.20.4",
+        "targetVersion": "20.19.2",
+        "dockerBaseImage": "node:20.19.2-alpine",
+        "ciWorkflow": ".github/workflows/ci.yml",
+        "enginesField": ">=20.0.0"
+      }
+    },
+    {
+      "itemId": "node20-003",
+      "repo": "notifications-service",
+      "org": "acme-platform",
+      "description": "Upgrade Node 18.19.1 -> 20.19.2 (engines, Dockerfile, CI matrix)",
+      "issueKey": "node-18-eol",
+      "issueLabel": "Node.js 18 EOL → 20 LTS",
+      "strategy": "MANUAL_REVIEW",
+      "status": "PENDING_APPROVAL",
+      "statusUpdatedAt": "2026-06-28T14:00:00Z",
+      "adoTicketUrl": "https://dev.azure.com/acme/Platform/_workitems/edit/48403",
+      "metadata": {
+        "currentVersion": "18.19.1",
+        "targetVersion": "20.19.2",
+        "dockerBaseImage": "node:20.19.2-alpine",
+        "ciWorkflow": ".github/workflows/ci.yml",
+        "enginesField": ">=20.0.0"
+      }
+    },
+    {
+      "itemId": "node20-004",
+      "repo": "devflo-cli",
+      "org": "acme-platform",
+      "description": "Upgrade Node 18.20.4 -> 20.19.2 (engines, CI matrix; no Docker image)",
+      "issueKey": "node-18-eol",
+      "issueLabel": "Node.js 18 EOL → 20 LTS",
+      "strategy": "MANUAL_REVIEW",
+      "status": "PENDING_APPROVAL",
+      "statusUpdatedAt": "2026-06-28T14:00:00Z",
+      "adoTicketUrl": "https://dev.azure.com/acme/Platform/_workitems/edit/48404",
+      "metadata": {
+        "currentVersion": "18.20.4",
+        "targetVersion": "20.19.2",
+        "ciWorkflow": ".github/workflows/ci.yml",
+        "enginesField": ">=20.0.0"
+      }
+    },
+    {
+      "itemId": "node20-005",
+      "repo": "payments-api",
+      "org": "acme-core",
+      "description": "Upgrade Node 18.20.4 -> 20.19.2 (engines, Dockerfile, CI matrix; native deps: bcrypt, pg-native)",
+      "issueKey": "node-18-eol",
+      "issueLabel": "Node.js 18 EOL → 20 LTS",
+      "strategy": "MANUAL_REVIEW",
+      "status": "PENDING_APPROVAL",
+      "statusUpdatedAt": "2026-06-28T14:00:00Z",
+      "adoTicketUrl": "https://dev.azure.com/acme/Payments/_workitems/edit/48405",
+      "metadata": {
+        "currentVersion": "18.20.4",
+        "targetVersion": "20.19.2",
+        "dockerBaseImage": "node:20.19.2-alpine",
+        "ciWorkflow": ".github/workflows/ci.yml",
+        "enginesField": ">=20.0.0",
+        "nativeDependencies": ["bcrypt", "pg-native"]
+      }
+    },
+    {
+      "itemId": "node20-006",
+      "repo": "data-export-service",
+      "org": "acme-labs",
+      "description": "Upgrade Node 18.17.0 -> 20.19.2 (engines, Dockerfile, CI matrix)",
+      "issueKey": "node-18-eol",
+      "issueLabel": "Node.js 18 EOL → 20 LTS",
+      "strategy": "MANUAL_REVIEW",
+      "status": "PENDING_APPROVAL",
+      "statusUpdatedAt": "2026-06-28T14:00:00Z",
+      "adoTicketUrl": "https://dev.azure.com/acme/Payments/_workitems/edit/48406",
+      "metadata": {
+        "currentVersion": "18.17.0",
+        "targetVersion": "20.19.2",
+        "dockerBaseImage": "node:20.19.2-alpine",
+        "ciWorkflow": ".github/workflows/ci.yml",
+        "enginesField": ">=20.0.0"
+      }
+    }
+  ]
+}

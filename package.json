@@ -1,0 +1,15 @@
+{
+  "name": "devflo",
+  "private": true,
+  "type": "module",
+  "workspaces": ["packages/*"],
+  "scripts": {
+    "postinstall": "npm run build -w @devflo/schema",
+    "dashboard": "npm run build -w @devflo/schema && concurrently -n server,web -c blue,green \"npm run dev -w @devflo/server\" \"npm run dev -w @devflo/dashboard\"",
+    "build": "npm run build -w @devflo/schema && npm run build -w @devflo/dashboard",
+    "typecheck": "npm run typecheck --workspaces --if-present"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.0"
+  }
+}

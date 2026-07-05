@@ -1,0 +1,117 @@
+{
+  "repos": [
+    {
+      "org": "acme-core",
+      "repo": "payments-api",
+      "securityUrl": "https://github.com/acme-core/payments-api/security/dependabot",
+      "dependabot": [
+        { "package": "undici", "severity": "critical", "affectedRange": ">= 6.0.0, < 6.21.4", "fixVersion": "6.21.4", "cveId": "CVE-2026-30144", "url": "https://github.com/advisories/GHSA-c7q9-xx44-qp2f", "manifestPath": "package-lock.json" },
+        { "package": "semver", "severity": "high", "affectedRange": "< 7.5.2", "fixVersion": "7.6.3", "cveId": "CVE-2026-27893", "url": "https://github.com/advisories/GHSA-hh8p-fx2q-jr9v", "manifestPath": "package-lock.json" },
+        { "package": "tmp", "severity": "low", "affectedRange": "<= 0.2.3", "fixVersion": "0.2.5", "cveId": "CVE-2026-21329", "url": "https://github.com/advisories/GHSA-52f5-9888-hmc6", "manifestPath": "package-lock.json" }
+      ],
+      "codeScanning": []
+    },
+    {
+      "org": "acme-core",
+      "repo": "payments-worker",
+      "securityUrl": "https://github.com/acme-core/payments-worker/security/dependabot",
+      "dependabot": [],
+      "codeScanning": []
+    },
+    {
+      "org": "acme-core",
+      "repo": "checkout-web",
+      "securityUrl": "https://github.com/acme-core/checkout-web/security/dependabot",
+      "dependabot": [
+        { "package": "semver", "severity": "high", "affectedRange": "< 7.5.2", "fixVersion": "7.6.3", "cveId": "CVE-2026-27893", "url": "https://github.com/advisories/GHSA-hh8p-fx2q-jr9v", "manifestPath": "package-lock.json" },
+        { "package": "axios", "severity": "high", "affectedRange": ">= 1.0.0, < 1.8.2", "fixVersion": "1.8.2", "cveId": "CVE-2026-28430", "url": "https://github.com/advisories/GHSA-jwcz-9h9m-3xr3", "manifestPath": "package-lock.json" },
+        { "package": "ws", "severity": "moderate", "affectedRange": "< 8.18.1", "fixVersion": "8.18.1", "cveId": "CVE-2026-29466", "url": "https://github.com/advisories/GHSA-3h5v-q93c-6h6q", "manifestPath": "package-lock.json" }
+      ],
+      "codeScanning": []
+    },
+    {
+      "org": "acme-platform",
+      "repo": "identity-service",
+      "securityUrl": "https://github.com/acme-platform/identity-service/security/dependabot",
+      "dependabot": [
+        { "package": "undici", "severity": "critical", "affectedRange": ">= 6.0.0, < 6.21.4", "fixVersion": "6.21.4", "cveId": "CVE-2026-30144", "url": "https://github.com/advisories/GHSA-c7q9-xx44-qp2f", "manifestPath": "package-lock.json" },
+        { "package": "jsonwebtoken", "severity": "critical", "affectedRange": "< 9.0.3", "fixVersion": "9.0.3", "cveId": "CVE-2026-24842", "url": "https://github.com/advisories/GHSA-8qff-qr5q-5pr8", "manifestPath": "package-lock.json" }
+      ],
+      "codeScanning": [
+        { "rule": "js/sql-injection", "severity": "high", "url": "https://github.com/acme-platform/identity-service/security/code-scanning/12" }
+      ]
+    },
+    {
+      "org": "acme-platform",
+      "repo": "api-gateway",
+      "securityUrl": "https://github.com/acme-platform/api-gateway/security/dependabot",
+      "dependabot": [
+        { "package": "undici", "severity": "critical", "affectedRange": ">= 6.0.0, < 6.21.4", "fixVersion": "6.21.4", "cveId": "CVE-2026-30144", "url": "https://github.com/advisories/GHSA-c7q9-xx44-qp2f", "manifestPath": "package-lock.json" },
+        { "package": "ws", "severity": "moderate", "affectedRange": "< 8.18.1", "fixVersion": "8.18.1", "cveId": "CVE-2026-29466", "url": "https://github.com/advisories/GHSA-3h5v-q93c-6h6q", "manifestPath": "package-lock.json" }
+      ],
+      "codeScanning": []
+    },
+    {
+      "org": "acme-platform",
+      "repo": "notifications-service",
+      "securityUrl": "https://github.com/acme-platform/notifications-service/security/dependabot",
+      "dependabot": [],
+      "codeScanning": []
+    },
+    {
+      "org": "acme-platform",
+      "repo": "devflo-cli",
+      "securityUrl": "https://github.com/acme-platform/devflo-cli/security/dependabot",
+      "dependabot": [
+        { "package": "jsonwebtoken", "severity": "critical", "affectedRange": "< 9.0.3", "fixVersion": "9.0.3", "cveId": "CVE-2026-24842", "url": "https://github.com/advisories/GHSA-8qff-qr5q-5pr8", "manifestPath": "package-lock.json" },
+        { "package": "tmp", "severity": "low", "affectedRange": "<= 0.2.3", "fixVersion": "0.2.5", "cveId": "CVE-2026-21329", "url": "https://github.com/advisories/GHSA-52f5-9888-hmc6", "manifestPath": "package-lock.json" }
+      ],
+      "codeScanning": []
+    },
+    {
+      "org": "acme-mobile",
+      "repo": "rn-customer-app",
+      "securityUrl": "https://github.com/acme-mobile/rn-customer-app/security/dependabot",
+      "dependabot": [
+        { "package": "axios", "severity": "high", "affectedRange": ">= 1.0.0, < 1.8.2", "fixVersion": "1.8.2", "cveId": "CVE-2026-28430", "url": "https://github.com/advisories/GHSA-jwcz-9h9m-3xr3", "manifestPath": "package-lock.json" },
+        { "package": "ws", "severity": "moderate", "affectedRange": "< 8.18.1", "fixVersion": "8.18.1", "cveId": "CVE-2026-29466", "url": "https://github.com/advisories/GHSA-3h5v-q93c-6h6q", "manifestPath": "package-lock.json" }
+      ],
+      "codeScanning": []
+    },
+    {
+      "org": "acme-mobile",
+      "repo": "rn-driver-app",
+      "securityUrl": "https://github.com/acme-mobile/rn-driver-app/security/dependabot",
+      "dependabot": [
+        { "package": "fast-xml-parser", "severity": "moderate", "affectedRange": "< 4.5.1", "fixVersion": "4.5.1", "cveId": "CVE-2026-25942", "url": "https://github.com/advisories/GHSA-6w62-hx7r-mw68", "manifestPath": "package-lock.json" }
+      ],
+      "codeScanning": []
+    },
+    {
+      "org": "acme-mobile",
+      "repo": "android-shell",
+      "securityUrl": "https://github.com/acme-mobile/android-shell/security/dependabot",
+      "dependabot": [],
+      "codeScanning": []
+    },
+    {
+      "org": "acme-labs",
+      "repo": "data-export-service",
+      "securityUrl": "https://github.com/acme-labs/data-export-service/security/dependabot",
+      "dependabot": [
+        { "package": "lodash", "severity": "high", "affectedRange": "< 4.17.23", "fixVersion": "4.17.23", "cveId": "CVE-2026-31021", "url": "https://github.com/advisories/GHSA-p6mc-m9q3-9v5f", "manifestPath": "package-lock.json" },
+        { "package": "tmp", "severity": "low", "affectedRange": "<= 0.2.3", "fixVersion": "0.2.5", "cveId": "CVE-2026-21329", "url": "https://github.com/advisories/GHSA-52f5-9888-hmc6", "manifestPath": "package-lock.json" }
+      ],
+      "codeScanning": []
+    },
+    {
+      "org": "acme-labs",
+      "repo": "karate-e2e-suite",
+      "securityUrl": "https://github.com/acme-labs/karate-e2e-suite/security/dependabot",
+      "dependabot": [
+        { "package": "lodash", "severity": "high", "affectedRange": "< 4.17.23", "fixVersion": "4.17.23", "cveId": "CVE-2026-31021", "url": "https://github.com/advisories/GHSA-p6mc-m9q3-9v5f", "manifestPath": "package.json" }
+      ],
+      "codeScanning": []
+    }
+  ]
+}
