@@ -48,7 +48,7 @@ function RoleSwitcher() {
   const selectCls =
     "mt-1.5 w-full rounded-[7px] border border-edge2 bg-panel2 px-2 py-1.5 text-xs text-ink";
   return (
-    <div className="mt-auto border-t border-edge px-3.5 py-3 text-[11.5px] text-dim">
+    <div className="shrink-0 border-t border-edge px-3.5 py-3 text-[11.5px] text-dim">
       Viewing as
       <select value={role} onChange={(e) => setRole(e.target.value as Role)} className={selectCls} aria-label="Role">
         {(Object.keys(ROLE_LABELS) as Role[]).map((r) => (
@@ -91,7 +91,7 @@ function Sidebar() {
   const link = ({ isActive }: { isActive: boolean }) => `${navBase} ${isActive ? navActive : ""}`;
 
   return (
-    <aside className="flex flex-col border-r border-edge bg-panel">
+    <aside className="flex h-full min-h-0 flex-col overflow-hidden border-r border-edge bg-panel">
       <div className="flex items-center gap-2.5 border-b border-edge px-3.5 py-4">
         <Logo />
         <span className="text-[14.5px] font-bold leading-[1.15] text-ink">
@@ -101,7 +101,7 @@ function Sidebar() {
           </small>
         </span>
       </div>
-      <nav className="flex flex-col gap-px p-2">
+      <nav className="flex min-h-0 flex-1 flex-col gap-px overflow-y-auto p-2">
         <NavLink to="/" end className={link}>
           <LayoutGrid className="h-4 w-4" /> Campaigns
         </NavLink>
@@ -137,9 +137,12 @@ function Sidebar() {
 
 export function Layout({ children }: { children: ReactNode }) {
   return (
-    <div className="grid min-h-screen grid-cols-[232px_1fr]">
+    // h-screen + overflow-hidden pins the app to the viewport: the sidebar
+    // keeps a fixed height (role switcher always visible) and only the
+    // content pane scrolls.
+    <div className="grid h-screen grid-cols-[232px_1fr] overflow-hidden">
       <Sidebar />
-      <main className="min-w-0 px-7 py-[22px]">{children}</main>
+      <main className="min-w-0 overflow-y-auto px-7 py-[22px]">{children}</main>
     </div>
   );
 }
