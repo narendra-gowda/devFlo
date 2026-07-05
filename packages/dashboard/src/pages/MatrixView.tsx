@@ -110,7 +110,7 @@ export function MatrixView({
           </thead>
           <tbody className="divide-y divide-edge/60">
             {matrix.rows.map((row) => (
-              <tr key={row.rowKey} className="hover:bg-panel2/70">
+              <tr key={row.rowKey} className="hover:bg-hover">
                 <td className="sticky left-0 whitespace-nowrap bg-panel px-4 py-2 font-medium text-ink">
                   {row.rowLabel}
                 </td>

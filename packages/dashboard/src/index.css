@@ -8,6 +8,7 @@
   --color-panel: #131419; /* cards, sidebar */
   --color-panel2: #17181f; /* raised surfaces, inputs */
   --color-panel3: #0e0f13; /* inset surfaces (open accordions) — darker than rows for depth */
+  --color-hover: #1e2027;  /* row hover highlight — neutral grey, a step brighter than panel rows */
   --color-edge: #24262f; /* default borders */
   --color-edge2: #2e313c; /* stronger borders */
   --color-ink: #e6e8ee; /* primary text */

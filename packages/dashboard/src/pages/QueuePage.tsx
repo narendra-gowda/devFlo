@@ -92,7 +92,7 @@ export function QueuePage({ type }: { type: QueueType }) {
             {rows.map(({ campaign, item }) => {
               const stale = type !== "completed" && daysSince(item.statusUpdatedAt) > 7;
               return (
-                <tr key={item.itemId} className="hover:bg-panel2/70">
+                <tr key={item.itemId} className="hover:bg-hover">
                   <td className="px-4 py-2.5">
                     <span className="font-semibold text-ink">{item.repo}</span>
                     <span className="block text-xs text-dim">{item.org}</span>

@@ -157,7 +157,7 @@ function GroupSection({ title, repos }: { title: string; repos: RepoAlerts[] }) 
                   key={key}
                   row={
                     <tr
-                      className={`cursor-pointer hover:bg-panel2/70 ${counts.critical > 0 ? "border-l-4 border-l-critical bg-critical/[.05]" : ""}`}
+                      className={`cursor-pointer hover:bg-hover ${counts.critical > 0 ? "border-l-4 border-l-critical bg-critical/[.05]" : ""}`}
                       onClick={() => toggle(key)}
                     >
                       <td className="px-2 py-2.5 text-dim">

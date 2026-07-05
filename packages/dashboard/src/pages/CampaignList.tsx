@@ -126,7 +126,7 @@ export function CampaignList() {
               const pending = pendingApprovalItems(c).filter((i) => scoped.includes(i)).length;
               const attention = attentionItems(c).filter((i) => scoped.includes(i)).length;
               return (
-                <tr key={c.campaignId} className="hover:bg-panel2/70">
+                <tr key={c.campaignId} className="hover:bg-hover">
                   <td className="px-4 py-3">
                     <Link to={`/campaigns/${c.campaignId}`} className="font-semibold text-ink hover:text-accent2">
                       {c.title}

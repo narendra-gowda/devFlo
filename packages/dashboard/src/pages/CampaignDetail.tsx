@@ -93,7 +93,7 @@ function ExpandedDetail({ campaign, item, colSpan }: { campaign: CampaignManifes
 }
 
 const rowCls = (attention: boolean) =>
-  `cursor-pointer hover:bg-panel2/70 ${attention ? "border-l-4 border-l-danger bg-danger/[.06]" : ""}`;
+  `cursor-pointer hover:bg-hover ${attention ? "border-l-4 border-l-danger bg-danger/[.06]" : ""}`;
 
 /**
  * Table layout for campaigns whose items carry fix units (e.g. security
