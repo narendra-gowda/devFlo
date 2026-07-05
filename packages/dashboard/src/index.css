@@ -4,22 +4,23 @@
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
 
-  --color-canvas: #0c0d10;   /* app background */
-  --color-panel: #131419;    /* cards, sidebar */
-  --color-panel2: #17181f;   /* raised surfaces, inputs */
-  --color-edge: #24262f;     /* default borders */
-  --color-edge2: #2e313c;    /* stronger borders */
-  --color-ink: #e6e8ee;      /* primary text */
-  --color-muted: #a4aabb;    /* secondary text */
-  --color-dim: #818899;      /* tertiary text: table headers, timestamps, captions */
+  --color-canvas: #0c0d10; /* app background */
+  --color-panel: #131419; /* cards, sidebar */
+  --color-panel2: #17181f; /* raised surfaces, inputs */
+  --color-panel3: #0e0f13; /* inset surfaces (open accordions) — darker than rows for depth */
+  --color-edge: #24262f; /* default borders */
+  --color-edge2: #2e313c; /* stronger borders */
+  --color-ink: #e6e8ee; /* primary text */
+  --color-muted: #a4aabb; /* secondary text */
+  --color-dim: #818899; /* tertiary text: table headers, timestamps, captions */
 
-  --color-accent: #8b7cf7;   /* brand violet */
-  --color-accent2: #c084fc;  /* light violet */
+  --color-accent: #8b7cf7; /* brand violet */
+  --color-accent2: #c084fc; /* light violet */
   --color-ok: #3fdd9d;
-  --color-warn: #f5b153;     /* approvals / pending */
+  --color-warn: #f5b153; /* approvals / pending */
   --color-critical: #ff3b3b; /* "critical" severity — saturated red */
-  --color-high: #ef7d33;     /* "high" severity — deeper orange */
-  --color-caution: #f7d94c;  /* "moderate" severity — bright yellow */
+  --color-high: #ef7d33; /* "high" severity — deeper orange */
+  --color-caution: #f7d94c; /* "moderate" severity — bright yellow */
   --color-danger: #f16a6a;
   --color-info: #63a9f9;
 }

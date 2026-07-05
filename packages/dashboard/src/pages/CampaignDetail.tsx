@@ -72,8 +72,11 @@ function ExpandedDetail({ campaign, item, colSpan }: { campaign: CampaignManifes
   const attention = ATTENTION_STATUSES.includes(item.status);
   return (
     <tr className={attention ? "border-l-4 border-l-danger" : ""}>
-      <td />
-      <td colSpan={colSpan} className="space-y-3 bg-panel2/60 px-3 py-3">
+      {/* Single full-width cell so the inset colour runs edge to edge. */}
+      <td
+        colSpan={colSpan}
+        className="space-y-3 bg-panel3 px-4 py-3 shadow-[inset_0_4px_8px_-4px_rgba(0,0,0,.6),inset_0_-4px_8px_-4px_rgba(0,0,0,.5)]"
+      >
         <p className="text-sm text-ink/90">{item.description}</p>
         {item.units && item.units.length > 0 && <UnitsTable units={item.units} />}
         {Object.keys(item.metadata).length > 0 && (
@@ -100,7 +103,8 @@ const rowCls = (attention: boolean) =>
 function UnitCountsTable({ campaign, items }: { campaign: CampaignManifest; items: CampaignItem[] }) {
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
   const categories = campaignUnitCategories(campaign);
-  const colSpan = categories.length + 4;
+  // chevron + repo + categories + total + status + age + links
+  const colSpan = categories.length + 6;
 
   const toggle = (id: string) => {
     const next = new Set(expanded);
@@ -231,7 +235,7 @@ function PlainItemsTable({ campaign, items }: { campaign: CampaignManifest; item
                     </td>
                   </tr>
                 }
-                detail={open ? <ExpandedDetail campaign={campaign} item={item} colSpan={6} /> : null}
+                detail={open ? <ExpandedDetail campaign={campaign} item={item} colSpan={7} /> : null}
               />
             );
           })}

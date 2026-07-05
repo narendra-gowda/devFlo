@@ -197,8 +197,11 @@ function GroupSection({ title, repos }: { title: string; repos: RepoAlerts[] }) 
                   detail={
                     open ? (
                       <tr>
-                        <td />
-                        <td colSpan={8} className="bg-panel2/60 px-3 py-3">
+                        {/* Single full-width cell so the inset colour runs edge to edge. */}
+                        <td
+                          colSpan={9}
+                          className="bg-panel3 px-4 py-3 shadow-[inset_0_4px_8px_-4px_rgba(0,0,0,.6),inset_0_-4px_8px_-4px_rgba(0,0,0,.5)]"
+                        >
                           <AlertDetail repo={r} />
                         </td>
                       </tr>
