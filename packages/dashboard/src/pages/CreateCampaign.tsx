@@ -80,7 +80,7 @@ export function CreateCampaign() {
 
   return (
     <div className="max-w-2xl space-y-4">
-      <Link to="/" className="text-sm text-muted hover:text-ink">← All campaigns</Link>
+      <Link to="/" className="inline-block text-sm text-muted hover:text-ink">← All campaigns</Link>
       <h1 className={pageTitle}>Create campaign</h1>
 
       <div className="flex gap-2.5 rounded-[10px] border border-info/25 bg-info/[.07] px-4 py-3 text-sm text-ink/90">

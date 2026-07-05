@@ -274,7 +274,8 @@ export function CampaignDetail() {
 
   return (
     <div className="space-y-4">
-      <Link to="/" className="text-sm text-muted hover:text-ink">← All campaigns</Link>
+      {/* inline-block so space-y's margin-bottom actually applies (inline elements ignore vertical margins) */}
+      <Link to="/" className="inline-block text-sm text-muted hover:text-ink">← All campaigns</Link>
 
       <div className={`${panel} px-5 py-4`}>
         <div className="flex flex-wrap items-center gap-3">
