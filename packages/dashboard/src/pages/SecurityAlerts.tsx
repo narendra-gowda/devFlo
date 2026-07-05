@@ -163,7 +163,10 @@ function GroupSection({ title, repos }: { title: string; repos: RepoAlerts[] }) 
                       <td className="px-2 py-2.5 text-dim">
                         {open ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
                       </td>
-                      <td className="px-2 py-2.5 font-semibold text-ink">{r.repo}</td>
+                      <td className="px-2 py-2.5">
+                        <span className="font-semibold text-ink">{r.repo}</span>
+                        <span className="block text-xs text-dim">{r.org}</span>
+                      </td>
                       {ALERT_SEVERITIES.map((s) => (
                         <td key={s} className="px-3 py-2.5 text-center tabular-nums">
                           {counts[s] > 0 ? (
