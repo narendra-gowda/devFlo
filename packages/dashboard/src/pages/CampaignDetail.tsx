@@ -20,7 +20,7 @@ import { ProgressBar } from "../components/ProgressBar";
 import { ApprovalBanner } from "../components/ApprovalBanner";
 import { MetadataTable } from "../components/MetadataTable";
 import { UnitsTable } from "../components/UnitsTable";
-import { panel, thBase } from "../components/ui";
+import { panel, thBase, thCenter } from "../components/ui";
 import { MatrixView } from "./MatrixView";
 import { daysSince, fmtDate } from "../lib/format";
 
@@ -115,9 +115,9 @@ function UnitCountsTable({ campaign, items }: { campaign: CampaignManifest; item
             <th className="w-8 px-2 py-2" />
             <th className={thBase.replace("px-4", "px-2")}>Repo</th>
             {categories.map((c) => (
-              <th key={c} className={`${thBase} text-center`}>{c.replaceAll("_", " ")}</th>
+              <th key={c} className={thCenter}>{c.replaceAll("_", " ")}</th>
             ))}
-            <th className={`${thBase} text-center`}>Total</th>
+            <th className={thCenter}>Total</th>
             <th className={thBase}>Status</th>
             <th className={thBase} title="Days in current status">Age</th>
             <th className={thBase}>Links</th>

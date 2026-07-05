@@ -13,4 +13,7 @@ export const panel = "rounded-[10px] border border-edge bg-panel";
 export const thBase =
   "px-4 py-2 text-left text-[10.5px] font-semibold uppercase tracking-[.07em] text-dim";
 
+/** Centered variant — don't combine thBase with `text-center` (conflicting utilities). */
+export const thCenter = thBase.replace("text-left", "text-center");
+
 export const pageTitle = "text-[17px] font-semibold tracking-tight text-ink";

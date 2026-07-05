@@ -10,14 +10,16 @@
   --color-edge: #24262f;     /* default borders */
   --color-edge2: #2e313c;    /* stronger borders */
   --color-ink: #e6e8ee;      /* primary text */
-  --color-muted: #8b90a0;    /* secondary text */
-  --color-dim: #5c6070;      /* tertiary text */
+  --color-muted: #a4aabb;    /* secondary text */
+  --color-dim: #818899;      /* tertiary text: table headers, timestamps, captions */
 
   --color-accent: #8b7cf7;   /* brand violet */
   --color-accent2: #c084fc;  /* light violet */
   --color-ok: #3fdd9d;
-  --color-warn: #f5b153;
-  --color-caution: #e5c454;  /* "moderate" tier */
+  --color-warn: #f5b153;     /* approvals / pending */
+  --color-critical: #ff3b3b; /* "critical" severity — saturated red */
+  --color-high: #ef7d33;     /* "high" severity — deeper orange */
+  --color-caution: #f7d94c;  /* "moderate" severity — bright yellow */
   --color-danger: #f16a6a;
   --color-info: #63a9f9;
 }

@@ -9,7 +9,7 @@ import {
 import { useAlerts, useRepos, ALERTS_REFRESH_MS } from "../api/hooks";
 import { useRole } from "../context/role";
 import { teamRepoKeys } from "../lib/roles";
-import { pageTitle, panel, thBase } from "../components/ui";
+import { pageTitle, panel, thBase, thCenter } from "../components/ui";
 
 /**
  * Consolidated live view of GitHub Dependabot + code-scanning alerts.
@@ -18,15 +18,15 @@ import { pageTitle, panel, thBase } from "../components/ui";
  */
 
 const SEVERITY_STYLES: Record<AlertSeverity, string> = {
-  critical: "bg-danger text-canvas font-bold",
-  high: "bg-warn/15 text-warn ring-1 ring-warn/30",
+  critical: "bg-critical/20 text-critical ring-1 ring-critical/50",
+  high: "bg-high/15 text-high ring-1 ring-high/35",
   moderate: "bg-caution/15 text-caution ring-1 ring-caution/30",
   low: "bg-edge2/40 text-muted ring-1 ring-edge2",
 };
 
 const COUNT_STYLES: Record<AlertSeverity, string> = {
-  critical: "font-bold text-danger",
-  high: "font-semibold text-warn",
+  critical: "font-bold text-critical",
+  high: "font-semibold text-high",
   moderate: "font-semibold text-caution",
   low: "font-semibold text-muted",
 };
@@ -134,8 +134,8 @@ function GroupSection({ title, repos }: { title: string; repos: RepoAlerts[] }) 
         <h2 className="font-mono text-sm font-semibold text-ink">{title}</h2>
         <span className="text-xs text-dim">
           {repos.length} repos ·
-          {groupTotals.critical > 0 && <span className="ml-1 font-semibold text-danger">{groupTotals.critical} critical</span>}
-          {groupTotals.high > 0 && <span className="ml-1 text-warn">{groupTotals.high} high</span>}
+          {groupTotals.critical > 0 && <span className="ml-1 font-semibold text-critical">{groupTotals.critical} critical</span>}
+          {groupTotals.high > 0 && <span className="ml-1 text-high">{groupTotals.high} high</span>}
           {groupTotals.moderate > 0 && <span className="ml-1 text-caution">{groupTotals.moderate} moderate</span>}
           {groupTotals.low > 0 && <span className="ml-1">{groupTotals.low} low</span>}
           {groupCs > 0 && <span className="ml-1 text-accent2">{groupCs} code scanning</span>}
@@ -149,10 +149,10 @@ function GroupSection({ title, repos }: { title: string; repos: RepoAlerts[] }) 
               <th className="w-8 px-2 py-2" />
               <th className={thBase.replace("px-4", "px-2")}>Repo</th>
               {ALERT_SEVERITIES.map((s) => (
-                <th key={s} className={`${thBase} text-center`}>{s}</th>
+                <th key={s} className={thCenter}>{s}</th>
               ))}
-              <th className={`${thBase} text-center`}>Code scanning</th>
-              <th className={`${thBase} text-center`}>Total</th>
+              <th className={thCenter}>Code scanning</th>
+              <th className={thCenter}>Total</th>
               <th className={thBase}>Link</th>
             </tr>
           </thead>
@@ -167,7 +167,7 @@ function GroupSection({ title, repos }: { title: string; repos: RepoAlerts[] }) 
                   key={key}
                   row={
                     <tr
-                      className={`cursor-pointer hover:bg-panel2/70 ${counts.critical > 0 ? "border-l-4 border-l-danger bg-danger/[.05]" : ""}`}
+                      className={`cursor-pointer hover:bg-panel2/70 ${counts.critical > 0 ? "border-l-4 border-l-critical bg-critical/[.05]" : ""}`}
                       onClick={() => toggle(key)}
                     >
                       <td className="px-2 py-2.5 text-dim">
