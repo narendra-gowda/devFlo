@@ -10,30 +10,19 @@ import { useAlerts, useRepos, ALERTS_REFRESH_MS } from "../api/hooks";
 import { useRole } from "../context/role";
 import { teamRepoKeys } from "../lib/roles";
 import { pageTitle, panel, thBase, thCenter } from "../components/ui";
+import { severityTone } from "../lib/severity";
 
 /**
  * Consolidated live view of GitHub Dependabot + code-scanning alerts.
  * This page is intentionally GitHub-specific (it renders GitHub's own
  * severity taxonomy) — unlike campaign views, which stay ecosystem-agnostic.
+ * Severity colours come from the shared lib/severity mapping so the alerts
+ * page and campaign views always read identically.
  */
-
-const SEVERITY_STYLES: Record<AlertSeverity, string> = {
-  critical: "bg-critical/20 text-critical ring-1 ring-critical/50",
-  high: "bg-high/15 text-high ring-1 ring-high/35",
-  moderate: "bg-caution/15 text-caution ring-1 ring-caution/30",
-  low: "bg-edge2/40 text-muted ring-1 ring-edge2",
-};
-
-const COUNT_STYLES: Record<AlertSeverity, string> = {
-  critical: "font-bold text-critical",
-  high: "font-semibold text-high",
-  moderate: "font-semibold text-caution",
-  low: "font-semibold text-muted",
-};
 
 function SeverityBadge({ severity }: { severity: AlertSeverity }) {
   return (
-    <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${SEVERITY_STYLES[severity]}`}>
+    <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${severityTone(severity).pill}`}>
       {severity}
     </span>
   );
@@ -177,7 +166,7 @@ function GroupSection({ title, repos }: { title: string; repos: RepoAlerts[] }) 
                       {ALERT_SEVERITIES.map((s) => (
                         <td key={s} className="px-3 py-2.5 text-center tabular-nums">
                           {counts[s] > 0 ? (
-                            <span className={COUNT_STYLES[s]}>{counts[s]}</span>
+                            <span className={severityTone(s).count}>{counts[s]}</span>
                           ) : (
                             <span className="text-edge2">·</span>
                           )}

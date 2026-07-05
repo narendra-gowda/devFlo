@@ -21,6 +21,7 @@ import { ApprovalBanner } from "../components/ApprovalBanner";
 import { MetadataTable } from "../components/MetadataTable";
 import { UnitsTable } from "../components/UnitsTable";
 import { panel, thBase, thCenter } from "../components/ui";
+import { severityTone } from "../lib/severity";
 import { MatrixView } from "./MatrixView";
 import { daysSince, fmtDate } from "../lib/format";
 
@@ -147,7 +148,7 @@ function UnitCountsTable({ campaign, items }: { campaign: CampaignManifest; item
                       const n = byCategory[c] ?? 0;
                       return (
                         <td key={c} className="px-3 py-2.5 text-center tabular-nums">
-                          {n > 0 ? <span className="font-semibold text-ink">{n}</span> : <span className="text-edge2">·</span>}
+                          {n > 0 ? <span className={severityTone(c).count}>{n}</span> : <span className="text-edge2">·</span>}
                         </td>
                       );
                     })}

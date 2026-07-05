@@ -1,4 +1,5 @@
 import type { FixUnit } from "@devflo/schema";
+import { severityTone } from "../lib/severity";
 
 /**
  * Renders an item's fix units (the contents of its single PR) as a table.
@@ -57,8 +58,10 @@ export function UnitsTable({ units }: { units: FixUnit[] }) {
               {hasCategory && (
                 <td className="px-3 py-2">
                   {unit.category ? (
-                    <span className="inline-flex whitespace-nowrap rounded-full bg-panel2 px-2 py-0.5 text-xs font-medium text-muted ring-1 ring-edge2">
-                      {unit.category.replaceAll("_", " ")}
+                    <span
+                      className={`inline-flex whitespace-nowrap rounded-full px-2 py-0.5 text-xs font-medium ${severityTone(unit.category).pill}`}
+                    >
+                      {unit.category.replaceAll("_", " ").toLowerCase()}
                     </span>
                   ) : (
                     <span className="text-dim">—</span>
