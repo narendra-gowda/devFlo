@@ -7,11 +7,14 @@ import { matchSeverityTone } from "../lib/severity";
  * for npm-dependabot that yields package/fromVersion/toVersion/severity/
  * directDependency/advisory, but the component knows nothing about npm.
  *
- * No dedicated category column: for security adapters `unit.category`
- * duplicates the severity already present in metadata (category still powers
- * the count columns at repo level). Metadata values that look like a known
- * severity render as pills via the shared recognition lookup.
+ * Layout is `table-fixed` with a locked first-column width so that when
+ * several accordions are open, the columns line up from row to row instead
+ * of each table sizing itself to its own content. Long values truncate with
+ * a tooltip.
  */
+
+/** Locked width of the "Fix" column — keeps open accordions aligned. */
+const FIX_COL_WIDTH = "w-64";
 
 function Value({ value }: { value: unknown }) {
   if (value === undefined || value === null || value === "") {
@@ -60,12 +63,12 @@ export function UnitsTable({ units }: { units: FixUnit[] }) {
 
   return (
     <div className="overflow-x-auto rounded-md border border-edge bg-panel">
-      <table className="w-full text-sm">
+      <table className="w-full table-fixed text-sm">
         <thead className="border-b border-edge text-left text-[10.5px] font-semibold uppercase tracking-[.07em] text-dim">
           <tr>
-            <th className="px-3 py-2">Fix</th>
+            <th className={`${FIX_COL_WIDTH} px-3 py-2`}>Fix</th>
             {columns.map((c) => (
-              <th key={c} className={`px-3 py-2 font-mono normal-case ${centered.has(c) ? "text-center" : ""}`}>
+              <th key={c} className={`truncate px-3 py-2 font-mono normal-case ${centered.has(c) ? "text-center" : ""}`} title={c}>
                 {c}
               </th>
             ))}
@@ -74,14 +77,21 @@ export function UnitsTable({ units }: { units: FixUnit[] }) {
         <tbody className="divide-y divide-edge/60">
           {units.map((unit) => (
             <tr key={unit.key}>
-              <td className="whitespace-nowrap px-3 py-2 font-medium text-ink">
+              <td className="truncate px-3 py-2 font-medium text-ink" title={unit.label ?? unit.key}>
                 {unit.label ?? unit.key}
               </td>
-              {columns.map((c) => (
-                <td key={c} className={`whitespace-nowrap px-3 py-2 text-ink/85 ${centered.has(c) ? "text-center" : ""}`}>
-                  <Value value={unit.metadata[c]} />
-                </td>
-              ))}
+              {columns.map((c) => {
+                const raw = unit.metadata[c];
+                return (
+                  <td
+                    key={c}
+                    className={`truncate px-3 py-2 text-ink/85 ${centered.has(c) ? "text-center" : ""}`}
+                    title={typeof raw === "string" || typeof raw === "number" ? String(raw) : undefined}
+                  >
+                    <Value value={raw} />
+                  </td>
+                );
+              })}
             </tr>
           ))}
         </tbody>

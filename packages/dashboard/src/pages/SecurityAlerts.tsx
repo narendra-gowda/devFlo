@@ -43,10 +43,11 @@ function AlertDetail({ repo }: { repo: RepoAlerts }) {
     <div className="space-y-3">
       {repo.dependabot.length > 0 && (
         <div className="overflow-x-auto rounded-md border border-edge bg-panel">
-          <table className="w-full text-sm">
+          {/* table-fixed + locked first column so open accordions align with each other */}
+          <table className="w-full table-fixed text-sm">
             <thead className="border-b border-edge text-left text-[10.5px] font-semibold uppercase tracking-[.07em] text-dim">
               <tr>
-                <th className="px-3 py-2">Package</th>
+                <th className="w-64 px-3 py-2">Package</th>
                 <th className="px-3 py-2 text-center">Severity</th>
                 <th className="px-3 py-2">Affected version</th>
                 <th className="px-3 py-2">Fix version</th>
@@ -56,13 +57,13 @@ function AlertDetail({ repo }: { repo: RepoAlerts }) {
             <tbody className="divide-y divide-edge/60">
               {repo.dependabot.map((a, i) => (
                 <tr key={`${a.package}-${a.cveId ?? i}`}>
-                  <td className="px-3 py-2 font-mono text-ink">{a.package}</td>
+                  <td className="truncate px-3 py-2 font-mono text-ink" title={a.package}>{a.package}</td>
                   <td className="px-3 py-2 text-center"><SeverityBadge severity={a.severity} /></td>
-                  <td className="px-3 py-2 font-mono text-xs text-ink/80">{a.affectedRange}</td>
-                  <td className="px-3 py-2 font-mono text-xs text-ink/80">
+                  <td className="truncate px-3 py-2 font-mono text-xs text-ink/80" title={a.affectedRange}>{a.affectedRange}</td>
+                  <td className="truncate px-3 py-2 font-mono text-xs text-ink/80" title={a.fixVersion}>
                     {a.fixVersion ?? <span className="italic text-dim">no fix yet</span>}
                   </td>
-                  <td className="px-3 py-2">
+                  <td className="truncate px-3 py-2">
                     {a.url ? (
                       <a href={a.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 whitespace-nowrap text-accent2 hover:underline">
                         {a.cveId ?? "advisory"} <ExternalLink className="h-3 w-3" />
