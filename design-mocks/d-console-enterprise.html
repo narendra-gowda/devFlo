@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>devFlo — Mock D · "Console" (enterprise ops, dark rail + dense light)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --rail:#101828; --rail2:#182233; --bg:#f4f6f9; --card:#fff; --border:#dde2ea;
+    --text:#101828; --muted:#5b6474; --dim:#8b93a3;
+    --brand:#2563eb; --green:#12805c; --amber:#b45309; --red:#b91c1c; --purple:#6d28d9;
+  }
+  *{box-sizing:border-box;margin:0}
+  body{font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:13px;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  .app{display:grid;grid-template-columns:232px 1fr;min-height:100vh}
+  .rail{background:var(--rail);color:#cbd3e1;padding:0 0 12px;display:flex;flex-direction:column}
+  .brand{display:flex;align-items:center;gap:10px;padding:16px;color:#fff;font-weight:700;font-size:14.5px;border-bottom:1px solid #1e2a3f}
+  .brand .mark{width:26px;height:26px;border-radius:6px;background:var(--brand);display:grid;place-items:center;font-size:11px;font-weight:800;color:#fff}
+  .brand small{display:block;font-weight:500;font-size:10px;color:#7c88a1;letter-spacing:.06em}
+  .rail nav{padding:10px 8px;display:flex;flex-direction:column;gap:1px}
+  .rail a{display:flex;gap:10px;align-items:center;padding:8px 10px;border-radius:6px;font-weight:500;font-size:13px;color:#aab4c6}
+  .rail a.on{background:var(--rail2);color:#fff;box-shadow:inset 3px 0 0 var(--brand)}
+  .rail a .n{margin-left:auto;background:#b91c1c;color:#fff;font-size:10px;font-weight:700;border-radius:99px;padding:1px 6px}
+  .rail .sec{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#63708a;padding:14px 18px 4px}
+  .rail .foot{margin-top:auto;padding:12px 16px;border-top:1px solid #1e2a3f;font-size:12px;color:#8b96ab}
+  .rail select{width:100%;margin-top:8px;background:var(--rail2);color:#dbe2ee;border:1px solid #263florida;border:1px solid #26324a;border-radius:6px;padding:6px 8px;font-size:12px}
+  .main{display:flex;flex-direction:column}
+  .toolbar{background:#fff;border-bottom:1px solid var(--border);padding:10px 22px;display:flex;align-items:center;gap:14px}
+  .crumbs{color:var(--dim);font-size:12.5px}
+  .crumbs b{color:var(--text);font-weight:600}
+  .toolbar .right{margin-left:auto;display:flex;gap:8px;align-items:center}
+  .search{border:1px solid var(--border);border-radius:6px;padding:6px 10px;color:var(--dim);font-size:12.5px;background:#fbfcfe;min-width:220px}
+  .btn{background:var(--brand);color:#fff;border:none;border-radius:6px;padding:7px 13px;font-weight:600;font-size:12.5px;cursor:pointer}
+  .content{padding:20px 22px}
+  h1{font-size:18px;font-weight:700;letter-spacing:-.01em}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:16px 0}
+  .kpi{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:13px 15px;display:flex;gap:12px;align-items:center}
+  .kpi .ic{width:34px;height:34px;border-radius:8px;display:grid;place-items:center;font-size:15px}
+  .kpi .v{font-size:21px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.1}
+  .kpi .l{font-size:11.5px;color:var(--muted)}
+  .i-a{background:#fef3e2;color:var(--amber)} .i-r{background:#fde8e8;color:var(--red)} .i-b{background:#e8effd;color:var(--brand)} .i-g{background:#e4f5ee;color:var(--green)}
+  .panel{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:16px}
+  .ph{padding:11px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;font-weight:600;font-size:13.5px}
+  .ph .tabs{display:flex;gap:2px;margin-left:14px}
+  .ph .tabs span{padding:4px 10px;border-radius:6px;font-size:12px;color:var(--muted);font-weight:500}
+  .ph .tabs span.on{background:#eef2f9;color:var(--brand)}
+  .ph .r{margin-left:auto;font-size:11.5px;color:var(--dim);font-weight:400}
+  table{width:100%;border-collapse:collapse}
+  th{text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);background:#f8fafc;padding:8px 14px;border-bottom:1px solid var(--border);font-weight:600}
+  th.c,td.c{text-align:center}
+  td{padding:10px 14px;border-bottom:1px solid #eaeef4;font-size:12.5px;vertical-align:middle}
+  tr:last-child td{border-bottom:none}
+  tr:hover td{background:#f8fafd}
+  .repo{font-weight:600}
+  .repo small{display:block;font-weight:400;color:var(--dim);font-size:11px;font-family:'JetBrains Mono',monospace}
+  .num{font-family:'JetBrains Mono',monospace;font-weight:500;font-variant-numeric:tabular-nums}
+  .n-crit{color:#fff;background:var(--red);border-radius:5px;padding:2px 8px;font-weight:700}
+  .n-high{color:var(--amber);font-weight:700}
+  .n-mod{color:#a16207}
+  .n-zero{color:#c3c9d4}
+  .pill{display:inline-flex;align-items:center;gap:6px;border-radius:99px;padding:3px 9px;font-size:11.5px;font-weight:600}
+  .p-wait{background:#fef3e2;color:var(--amber)} .p-fail{background:#fde8e8;color:var(--red)} .p-pr{background:#ede9fe;color:var(--purple)} .p-merged{background:#e4f5ee;color:var(--green)} .p-prog{background:#e8effd;color:var(--brand)}
+  .lnk{color:var(--brand);font-weight:500;font-size:12px}
+  .sla{font-size:11px;color:var(--red);font-weight:600}
+  .footer{color:var(--dim);font-size:11.5px;text-align:center;padding:18px}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="rail">
+    <div class="brand"><span class="mark">dF</span><span>devFlo<small>INTERNAL DEV PLATFORM</small></span></div>
+    <nav>
+      <a class="on" href="#">▤ Campaigns</a>
+      <a href="#">⚠ Security alerts <span class="n">5</span></a>
+      <a href="#">◲ Repositories</a>
+      <div class="sec">Queues</div>
+      <a href="#">◔ Approval queue <span class="n" style="background:#b45309">3</span></a>
+      <a href="#">✗ Needs attention</a>
+      <div class="sec">Admin</div>
+      <a href="#">⚙ Adapters</a>
+      <a href="#">👥 Teams &amp; roles</a>
+    </nav>
+    <div class="foot">Viewing as<select><option>Developer · platform-team</option><option>Engineering Manager</option><option>Stakeholder / Security</option></select></div>
+  </aside>
+  <div class="main">
+    <div class="toolbar">
+      <span class="crumbs">Campaigns / <b>Dependabot criticals — June wave 2</b></span>
+      <span class="right"><span class="search">🔍 Filter repos… </span><button class="btn">Approve 2 pending…</button></span>
+    </div>
+    <div class="content">
+      <h1>Dependabot criticals — June wave 2 <span class="pill p-prog" style="margin-left:8px">In progress</span></h1>
+      <div class="kpis">
+        <div class="kpi"><span class="ic i-a">◔</span><span><span class="v">2</span><div class="l">awaiting approval</div></span></div>
+        <div class="kpi"><span class="ic i-r">✗</span><span><span class="v">2</span><div class="l">need attention</div></span></div>
+        <div class="kpi"><span class="ic i-b">⇅</span><span><span class="v">2</span><div class="l">PRs open</div></span></div>
+        <div class="kpi"><span class="ic i-g">✓</span><span><span class="v">2/9</span><div class="l">repos merged · 22%</div></span></div>
+      </div>
+      <div class="panel">
+        <div class="ph">Repos <span class="tabs"><span class="on">Table</span><span>Issue × repo matrix</span></span><span class="r">one PR per repo · severity = open findings in that PR</span></div>
+        <table>
+          <thead><tr><th>Repo</th><th class="c">Critical</th><th class="c">High</th><th class="c">Moderate</th><th class="c">Low</th><th class="c">Code scanning</th><th class="c">Total</th><th>Status</th><th>Age</th><th>Links</th></tr></thead>
+          <tbody>
+            <tr><td class="repo">identity-service<small>acme-platform</small></td><td class="c num"><span class="n-crit">2</span></td><td class="c num n-zero">·</td><td class="c num n-zero">·</td><td class="c num n-zero">·</td><td class="c num" style="color:var(--purple);font-weight:700">1</td><td class="c num">3</td><td><span class="pill p-fail">Tests failed</span></td><td class="num">3d</td><td><span class="lnk">PR</span> · <span class="lnk">ADO</span></td></tr>
+            <tr><td class="repo">data-export-service<small>acme-labs</small></td><td class="c num n-zero">·</td><td class="c num n-high">1</td><td class="c num n-zero">·</td><td class="c num">1</td><td class="c num n-zero">·</td><td class="c num">2</td><td><span class="pill p-fail">Needs attention</span></td><td class="num">2d</td><td><span class="lnk">ADO</span></td></tr>
+            <tr><td class="repo">payments-api<small>acme-core</small></td><td class="c num"><span class="n-crit">1</span></td><td class="c num n-high">1</td><td class="c num n-zero">·</td><td class="c num">1</td><td class="c num n-zero">·</td><td class="c num">3</td><td><span class="pill p-wait">Pending approval</span></td><td class="num sla">12d ⚠</td><td><span class="lnk">ADO</span></td></tr>
+            <tr><td class="repo">api-gateway<small>acme-platform</small></td><td class="c num"><span class="n-crit">1</span></td><td class="c num n-zero">·</td><td class="c num n-mod">1</td><td class="c num n-zero">·</td><td class="c num n-zero">·</td><td class="c num">2</td><td><span class="pill p-pr">PR raised</span></td><td class="num">2d</td><td><span class="lnk">PR</span> · <span class="lnk">ADO</span></td></tr>
+            <tr><td class="repo">checkout-web<small>acme-core</small></td><td class="c num n-zero">·</td><td class="c num n-high">2</td><td class="c num n-mod">1</td><td class="c num n-zero">·</td><td class="c num n-zero">·</td><td class="c num">3</td><td><span class="pill p-pr">PR raised</span></td><td class="num">1d</td><td><span class="lnk">PR</span> · <span class="lnk">ADO</span></td></tr>
+            <tr><td class="repo">payments-worker<small>acme-core</small></td><td class="c num"><span class="n-crit">1</span></td><td class="c num n-zero">·</td><td class="c num n-zero">·</td><td class="c num n-zero">·</td><td class="c num n-zero">·</td><td class="c num">1</td><td><span class="pill p-merged">Merged</span></td><td class="num">8d</td><td><span class="lnk">PR</span> · <span class="lnk">ADO</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="footer">Design mock D · “Console” — enterprise ops style · dark rail with queues &amp; badge counts, dense data table, SLA aging built in</p>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,21 +1,56 @@
-import { Link, NavLink } from "react-router-dom";
-import { Plus, Workflow } from "lucide-react";
+import { NavLink } from "react-router-dom";
+import {
+  CheckCircle2,
+  LayoutGrid,
+  Settings,
+  ShieldAlert,
+  CircleDashed,
+  Users,
+  XCircle,
+} from "lucide-react";
 import type { ReactNode } from "react";
 import { ROLE_LABELS, useRole, type Role } from "../context/role";
+import { useCampaigns, useRepos } from "../api/hooks";
+import { teamRepoKeys, visibleItems } from "../lib/roles";
+import { ATTENTION_STATUSES } from "@devflo/schema";
+import { Logo } from "./Logo";
 
 const TEAMS = ["platform-team", "payments-team", "mobile-team"];
 
+const navBase =
+  "flex items-center gap-2.5 rounded-[7px] px-2.5 py-[7px] text-[13px] font-medium text-muted hover:text-ink";
+const navActive =
+  "bg-[#1d1f29] text-ink shadow-[inset_0_0_0_1px_var(--color-edge2),inset_3px_0_0_var(--color-accent)]";
+
+function QueueBadge({ count, tone }: { count: number; tone: "warn" | "danger" }) {
+  if (count === 0) return null;
+  const cls =
+    tone === "warn"
+      ? "bg-warn/15 text-warn shadow-[0_0_0_1px_rgba(245,177,83,.3),0_0_12px_-2px_rgba(245,177,83,.35)]"
+      : "bg-danger/15 text-danger shadow-[0_0_0_1px_rgba(241,106,106,.3),0_0_12px_-2px_rgba(241,106,106,.4)]";
+  return (
+    <span className={`ml-auto rounded-full px-[7px] py-px text-[10px] font-bold leading-normal ${cls}`}>
+      {count}
+    </span>
+  );
+}
+
+function SectionLabel({ children }: { children: ReactNode }) {
+  return (
+    <div className="px-[18px] pb-[5px] pt-4 text-[10px] font-medium uppercase tracking-[.1em] text-dim">
+      {children}
+    </div>
+  );
+}
+
 function RoleSwitcher() {
   const { role, team, setRole, setTeam } = useRole();
+  const selectCls =
+    "mt-1.5 w-full rounded-[7px] border border-edge2 bg-panel2 px-2 py-1.5 text-xs text-ink";
   return (
-    <div className="flex items-center gap-2 text-sm">
-      <span className="text-xs text-slate-400 hidden sm:inline">Viewing as</span>
-      <select
-        value={role}
-        onChange={(e) => setRole(e.target.value as Role)}
-        className="rounded-md border border-slate-300 bg-white px-2 py-1 text-sm"
-        aria-label="Role"
-      >
+    <div className="mt-auto border-t border-edge px-3.5 py-3 text-[11.5px] text-dim">
+      Viewing as
+      <select value={role} onChange={(e) => setRole(e.target.value as Role)} className={selectCls} aria-label="Role">
         {(Object.keys(ROLE_LABELS) as Role[]).map((r) => (
           <option key={r} value={r}>
             {ROLE_LABELS[r]}
@@ -23,12 +58,7 @@ function RoleSwitcher() {
         ))}
       </select>
       {role !== "stakeholder" && (
-        <select
-          value={team}
-          onChange={(e) => setTeam(e.target.value)}
-          className="rounded-md border border-slate-300 bg-white px-2 py-1 text-sm"
-          aria-label="Team"
-        >
+        <select value={team} onChange={(e) => setTeam(e.target.value)} className={selectCls} aria-label="Team">
           {TEAMS.map((t) => (
             <option key={t} value={t}>
               {t}
@@ -40,51 +70,76 @@ function RoleSwitcher() {
   );
 }
 
-export function Layout({ children }: { children: ReactNode }) {
-  const { can } = useRole();
+function Sidebar() {
+  const { role, team } = useRole();
+  const campaignsQ = useCampaigns();
+  const reposQ = useRepos();
+
+  // Live queue counts, scoped to the current role — same derivation the pages use.
+  let pending = 0;
+  let attention = 0;
+  if (campaignsQ.data && reposQ.data) {
+    const teamRepos = teamRepoKeys(reposQ.data, team);
+    for (const c of campaignsQ.data.campaigns) {
+      for (const i of visibleItems(c, role, teamRepos)) {
+        if (i.status === "PENDING_APPROVAL") pending++;
+        else if (ATTENTION_STATUSES.includes(i.status)) attention++;
+      }
+    }
+  }
+
+  const link = ({ isActive }: { isActive: boolean }) => `${navBase} ${isActive ? navActive : ""}`;
+
   return (
-    <div className="min-h-screen">
-      <header className="sticky top-0 z-10 border-b border-slate-200 bg-white">
-        <div className="mx-auto flex max-w-7xl items-center gap-6 px-4 py-3">
-          <Link to="/" className="flex items-center gap-2 font-semibold text-slate-900">
-            <Workflow className="h-5 w-5 text-blue-600" />
-            devFlo
-            <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-slate-500">
-              Phase 1 · local
-            </span>
-          </Link>
-          <nav className="flex items-center gap-4 text-sm">
-            <NavLink
-              to="/"
-              className={({ isActive }) =>
-                isActive ? "font-medium text-blue-700" : "text-slate-600 hover:text-slate-900"
-              }
-            >
-              Campaigns
-            </NavLink>
-            <NavLink
-              to="/alerts"
-              className={({ isActive }) =>
-                isActive ? "font-medium text-blue-700" : "text-slate-600 hover:text-slate-900"
-              }
-            >
-              Security alerts
-            </NavLink>
-          </nav>
-          <div className="ml-auto flex items-center gap-3">
-            {can.create && (
-              <Link
-                to="/campaigns/new"
-                className="inline-flex items-center gap-1 rounded-md bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700"
-              >
-                <Plus className="h-4 w-4" /> Create campaign
-              </Link>
-            )}
-            <RoleSwitcher />
-          </div>
-        </div>
-      </header>
-      <main className="mx-auto max-w-7xl px-4 py-6">{children}</main>
+    <aside className="flex flex-col border-r border-edge bg-panel">
+      <div className="flex items-center gap-2.5 border-b border-edge px-3.5 py-4">
+        <Logo />
+        <span className="text-[14.5px] font-bold leading-[1.15] text-ink">
+          devFlo
+          <small className="block text-[9.5px] font-medium tracking-[.09em] text-dim">
+            INTERNAL DEV PLATFORM
+          </small>
+        </span>
+      </div>
+      <nav className="flex flex-col gap-px p-2">
+        <NavLink to="/" end className={link}>
+          <LayoutGrid className="h-4 w-4" /> Campaigns
+        </NavLink>
+        <NavLink to="/alerts" className={link}>
+          <ShieldAlert className="h-4 w-4" /> Security alerts
+        </NavLink>
+
+        <SectionLabel>Queues</SectionLabel>
+        <NavLink to="/queues/approvals" className={link}>
+          <CircleDashed className="h-4 w-4" /> Awaiting approval
+          <QueueBadge count={pending} tone="warn" />
+        </NavLink>
+        <NavLink to="/queues/attention" className={link}>
+          <XCircle className="h-4 w-4" /> Needs attention
+          <QueueBadge count={attention} tone="danger" />
+        </NavLink>
+        <NavLink to="/queues/completed" className={link}>
+          <CheckCircle2 className="h-4 w-4" /> Completed
+        </NavLink>
+
+        <SectionLabel>Admin</SectionLabel>
+        <span className={`${navBase} cursor-not-allowed opacity-45`} title="Adapter registry arrives in Phase 3/4">
+          <Settings className="h-4 w-4" /> Adapters
+        </span>
+        <span className={`${navBase} cursor-not-allowed opacity-45`} title="RBAC arrives in Phase 4">
+          <Users className="h-4 w-4" /> Teams &amp; roles
+        </span>
+      </nav>
+      <RoleSwitcher />
+    </aside>
+  );
+}
+
+export function Layout({ children }: { children: ReactNode }) {
+  return (
+    <div className="grid min-h-screen grid-cols-[232px_1fr]">
+      <Sidebar />
+      <main className="min-w-0 px-7 py-[22px]">{children}</main>
     </div>
   );
 }

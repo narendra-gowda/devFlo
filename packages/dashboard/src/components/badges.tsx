@@ -1,31 +1,32 @@
 import type { CampaignStatus, ItemStatus, Strategy } from "@devflo/schema";
 
 /**
- * Status/risk rendering is a pure lookup over schema enums — no campaign-type
+ * Status rendering is a pure lookup over schema enums — no campaign-type
  * logic anywhere. Adding a new campaign type requires zero changes here.
  */
 
-const base =
-  "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium whitespace-nowrap";
+const pill =
+  "inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium whitespace-nowrap ring-1";
 
-const CAMPAIGN_STATUS_STYLES: Record<CampaignStatus, string> = {
-  DRAFT: "bg-slate-100 text-slate-600 ring-1 ring-slate-200",
-  AWAITING_APPROVAL: "bg-amber-100 text-amber-800 ring-1 ring-amber-300",
-  IN_PROGRESS: "bg-sky-100 text-sky-800 ring-1 ring-sky-200",
-  COMPLETED: "bg-green-100 text-green-800 ring-1 ring-green-200",
-  FAILED: "bg-red-100 text-red-800 ring-1 ring-red-200",
-  PAUSED: "bg-slate-200 text-slate-600 ring-1 ring-slate-300",
+/** Campaign status: Linear-style glowing dot + label. */
+const CAMPAIGN_DOTS: Record<CampaignStatus, { dot: string; glow?: string }> = {
+  DRAFT: { dot: "bg-dim" },
+  AWAITING_APPROVAL: { dot: "bg-warn", glow: "0 0 8px var(--color-warn)" },
+  IN_PROGRESS: { dot: "bg-info", glow: "0 0 8px var(--color-info)" },
+  COMPLETED: { dot: "bg-ok", glow: "0 0 8px var(--color-ok)" },
+  FAILED: { dot: "bg-danger", glow: "0 0 8px var(--color-danger)" },
+  PAUSED: { dot: "bg-dim" },
 };
 
-const ITEM_STATUS_STYLES: Record<ItemStatus, string> = {
-  PENDING_APPROVAL: "bg-amber-100 text-amber-800 ring-1 ring-amber-300",
-  APPROVED: "bg-blue-100 text-blue-800 ring-1 ring-blue-200",
-  SKIPPED: "bg-slate-100 text-slate-500 ring-1 ring-slate-200",
-  IN_PROGRESS: "bg-sky-100 text-sky-800 ring-1 ring-sky-200",
-  TESTS_FAILED: "bg-red-100 text-red-800 ring-1 ring-red-300",
-  PR_RAISED: "bg-indigo-100 text-indigo-800 ring-1 ring-indigo-200",
-  MERGED: "bg-green-100 text-green-800 ring-1 ring-green-200",
-  NEEDS_ATTENTION: "bg-rose-100 text-rose-800 ring-1 ring-rose-300",
+const ITEM_STYLES: Record<ItemStatus, string> = {
+  PENDING_APPROVAL: "bg-warn/15 text-warn ring-warn/30",
+  APPROVED: "bg-accent/15 text-accent2 ring-accent/30",
+  SKIPPED: "bg-edge2/40 text-muted ring-edge2",
+  IN_PROGRESS: "bg-info/15 text-info ring-info/30",
+  TESTS_FAILED: "bg-danger/15 text-danger ring-danger/35",
+  PR_RAISED: "bg-accent2/15 text-accent2 ring-accent2/30",
+  MERGED: "bg-ok/15 text-ok ring-ok/30",
+  NEEDS_ATTENTION: "bg-danger/20 text-danger ring-danger/45",
 };
 
 function label(status: string): string {
@@ -33,20 +34,29 @@ function label(status: string): string {
 }
 
 export function CampaignStatusBadge({ status }: { status: CampaignStatus }) {
-  return <span className={`${base} ${CAMPAIGN_STATUS_STYLES[status]}`}>{label(status)}</span>;
+  const s = CAMPAIGN_DOTS[status];
+  return (
+    <span className="inline-flex items-center gap-[7px] whitespace-nowrap text-xs font-medium text-ink">
+      <span
+        className={`h-[7px] w-[7px] rounded-full ${s.dot}`}
+        style={s.glow ? { boxShadow: s.glow } : undefined}
+      />
+      {label(status)}
+    </span>
+  );
 }
 
 export function ItemStatusBadge({ status }: { status: ItemStatus }) {
-  return <span className={`${base} ${ITEM_STATUS_STYLES[status]}`}>{label(status)}</span>;
+  return <span className={`${pill} ${ITEM_STYLES[status]}`}>{label(status)}</span>;
 }
 
 export function StrategyBadge({ strategy }: { strategy: Strategy }) {
   return (
     <span
-      className={`${base} ${
+      className={`${pill} ${
         strategy === "AUTO_FIX"
-          ? "bg-teal-50 text-teal-700 ring-1 ring-teal-200"
-          : "bg-purple-50 text-purple-700 ring-1 ring-purple-200"
+          ? "bg-ok/10 text-ok ring-ok/25"
+          : "bg-accent2/10 text-accent2 ring-accent2/25"
       }`}
     >
       {strategy === "AUTO_FIX" ? "auto-fix" : "manual review"}

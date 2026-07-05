@@ -1,5 +1,32 @@
 @import "tailwindcss";
 
+/* Midnight theme — design tokens (mock B v2, approved) */
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  --color-canvas: #0c0d10;   /* app background */
+  --color-panel: #131419;    /* cards, sidebar */
+  --color-panel2: #17181f;   /* raised surfaces, inputs */
+  --color-edge: #24262f;     /* default borders */
+  --color-edge2: #2e313c;    /* stronger borders */
+  --color-ink: #e6e8ee;      /* primary text */
+  --color-muted: #8b90a0;    /* secondary text */
+  --color-dim: #5c6070;      /* tertiary text */
+
+  --color-accent: #8b7cf7;   /* brand violet */
+  --color-accent2: #c084fc;  /* light violet */
+  --color-ok: #3fdd9d;
+  --color-warn: #f5b153;
+  --color-caution: #e5c454;  /* "moderate" tier */
+  --color-danger: #f16a6a;
+  --color-info: #63a9f9;
+}
+
+:root {
+  color-scheme: dark;
+}
+
 body {
-  @apply bg-slate-50 text-slate-900 antialiased;
+  @apply bg-canvas text-ink antialiased;
+  font-size: 13.5px;
 }

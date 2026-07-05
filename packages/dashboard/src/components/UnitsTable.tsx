@@ -9,20 +9,20 @@ import type { FixUnit } from "@devflo/schema";
 
 function Value({ value }: { value: unknown }) {
   if (value === undefined || value === null || value === "") {
-    return <span className="text-slate-300">—</span>;
+    return <span className="text-dim">—</span>;
   }
   if (typeof value === "boolean") {
-    return <span className={value ? "text-green-700" : "text-slate-500"}>{value ? "yes" : "no"}</span>;
+    return <span className={value ? "text-ok" : "text-muted"}>{value ? "yes" : "no"}</span>;
   }
   if (typeof value === "string" && value.startsWith("http")) {
     return (
-      <a href={value} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline">
+      <a href={value} target="_blank" rel="noreferrer" className="text-accent2 hover:underline">
         {new URL(value).pathname.split("/").filter(Boolean).pop() ?? value}
       </a>
     );
   }
   if (typeof value === "object") {
-    return <code className="text-xs bg-slate-100 rounded px-1">{JSON.stringify(value)}</code>;
+    return <code className="rounded bg-panel2 px-1 text-xs">{JSON.stringify(value)}</code>;
   }
   return <>{String(value)}</>;
 }
@@ -37,9 +37,9 @@ export function UnitsTable({ units }: { units: FixUnit[] }) {
   const hasCategory = units.some((u) => u.category);
 
   return (
-    <div className="overflow-x-auto rounded-md border border-slate-200 bg-white">
+    <div className="overflow-x-auto rounded-md border border-edge bg-panel">
       <table className="w-full text-sm">
-        <thead className="border-b border-slate-200 bg-slate-50 text-left text-xs font-medium uppercase tracking-wide text-slate-500">
+        <thead className="border-b border-edge text-left text-[10.5px] font-semibold uppercase tracking-[.07em] text-dim">
           <tr>
             <th className="px-3 py-2">Fix</th>
             {hasCategory && <th className="px-3 py-2">Category</th>}
@@ -48,25 +48,25 @@ export function UnitsTable({ units }: { units: FixUnit[] }) {
             ))}
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-100">
+        <tbody className="divide-y divide-edge/60">
           {units.map((unit) => (
             <tr key={unit.key}>
-              <td className="px-3 py-2 font-medium text-slate-800 whitespace-nowrap">
+              <td className="whitespace-nowrap px-3 py-2 font-medium text-ink">
                 {unit.label ?? unit.key}
               </td>
               {hasCategory && (
                 <td className="px-3 py-2">
                   {unit.category ? (
-                    <span className="inline-flex rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700 ring-1 ring-slate-200 whitespace-nowrap">
+                    <span className="inline-flex whitespace-nowrap rounded-full bg-panel2 px-2 py-0.5 text-xs font-medium text-muted ring-1 ring-edge2">
                       {unit.category.replaceAll("_", " ")}
                     </span>
                   ) : (
-                    <span className="text-slate-300">—</span>
+                    <span className="text-dim">—</span>
                   )}
                 </td>
               )}
               {columns.map((c) => (
-                <td key={c} className="px-3 py-2 text-slate-700 whitespace-nowrap">
+                <td key={c} className="whitespace-nowrap px-3 py-2 text-ink/85">
                   <Value value={unit.metadata[c]} />
                 </td>
               ))}

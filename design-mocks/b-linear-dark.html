@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>devFlo — Mock B · "Midnight" (Linear-inspired dark + sidebar)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0c0d10; --panel:#131419; --panel2:#17181f; --border:#24262f; --border2:#2e313c;
+    --text:#e6e8ee; --muted:#8b90a0; --dim:#5c6070;
+    --accent:#8b7cf7; --green:#3fdd9d; --amber:#f5b153; --red:#f16a6a; --blue:#63a9f9; --purple:#c084fc;
+  }
+  *{box-sizing:border-box;margin:0}
+  body{font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:13.5px;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  .app{display:grid;grid-template-columns:220px 1fr;min-height:100vh}
+  .side{background:var(--panel);border-right:1px solid var(--border);padding:16px 10px;display:flex;flex-direction:column;gap:2px}
+  .brand{display:flex;align-items:center;gap:9px;padding:6px 10px 16px;font-weight:700;font-size:14px}
+  .brand .mark{width:24px;height:24px;border-radius:6px;background:linear-gradient(135deg,#8b7cf7,#5a48e8);display:grid;place-items:center;font-size:11px;font-weight:800;box-shadow:0 0 18px rgba(139,124,247,.45)}
+  .side a{display:flex;align-items:center;gap:9px;padding:7px 10px;border-radius:7px;color:var(--muted);font-weight:500}
+  .side a.on{background:#1d1f29;color:var(--text);box-shadow:inset 0 0 0 1px var(--border2)}
+  .side a .k{margin-left:auto;font-size:10px;color:var(--dim);border:1px solid var(--border);border-radius:4px;padding:1px 5px;font-family:ui-monospace,monospace}
+  .side .sec{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);padding:16px 10px 6px}
+  .side .foot{margin-top:auto;padding:10px;border-top:1px solid var(--border);display:flex;gap:9px;align-items:center;color:var(--muted);font-size:12.5px}
+  .dotu{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#f5b153,#f16a6a);display:grid;place-items:center;font-size:9px;font-weight:700;color:#0c0d10}
+  main{padding:22px 28px}
+  .top{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+  h1{font-size:17px;font-weight:600;letter-spacing:-.01em}
+  .crumb{color:var(--dim)}
+  .top .right{margin-left:auto;display:flex;gap:8px}
+  .btn{background:var(--accent);color:#0d0a1f;font-weight:600;border:none;border-radius:7px;padding:7px 13px;font-size:12.5px;cursor:pointer;box-shadow:0 0 20px -4px rgba(139,124,247,.5)}
+  .ghost{background:var(--panel2);border:1px solid var(--border2);color:var(--muted);border-radius:7px;padding:7px 12px;font-size:12.5px;cursor:pointer}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+  .stat{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+  .stat .l{color:var(--muted);font-size:11.5px;font-weight:500}
+  .stat .v{font-size:24px;font-weight:700;margin-top:6px;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+  .stat .s{font-size:11.5px;color:var(--dim);margin-top:2px}
+  .glow-a .v{color:var(--amber);text-shadow:0 0 24px rgba(245,177,83,.35)}
+  .glow-r .v{color:var(--red);text-shadow:0 0 24px rgba(241,106,106,.35)}
+  .banner{display:flex;align-items:center;gap:12px;background:rgba(245,177,83,.07);border:1px solid rgba(245,177,83,.25);border-radius:10px;padding:11px 15px;margin-bottom:18px}
+  .banner .pulse{width:8px;height:8px;border-radius:50%;background:var(--amber);box-shadow:0 0 0 4px rgba(245,177,83,.15), 0 0 14px rgba(245,177,83,.6)}
+  .banner code{font-family:ui-monospace,monospace;font-size:11.5px;background:#242013;border:1px solid rgba(245,177,83,.25);border-radius:5px;padding:1px 6px;color:var(--amber)}
+  .list{background:var(--panel);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+  .lh{display:flex;gap:10px;align-items:center;padding:11px 16px;border-bottom:1px solid var(--border);color:var(--muted);font-size:12px}
+  .lh .cnt{background:#1d1f29;border:1px solid var(--border2);border-radius:99px;padding:1px 8px;font-size:11px}
+  table{width:100%;border-collapse:collapse}
+  th{text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--dim);padding:8px 16px;border-bottom:1px solid var(--border);font-weight:600}
+  td{padding:13px 16px;border-bottom:1px solid #1c1e26;vertical-align:middle}
+  tr:last-child td{border-bottom:none}
+  tr:hover td{background:#15161d}
+  b{font-weight:600}
+  .type{font-family:ui-monospace,monospace;font-size:10.5px;color:var(--purple);background:rgba(192,132,252,.09);border:1px solid rgba(192,132,252,.2);border-radius:5px;padding:1px 6px}
+  .meta{display:flex;gap:10px;margin-top:5px;font-size:11.5px;color:var(--dim)}
+  .meta .w{color:var(--amber)} .meta .d{color:var(--red)}
+  .st{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:500}
+  .st .dot{width:7px;height:7px;border-radius:50%}
+  .s-prog .dot{background:var(--blue);box-shadow:0 0 8px var(--blue)}
+  .s-wait .dot{background:var(--amber);box-shadow:0 0 8px var(--amber)}
+  .s-done .dot{background:var(--green);box-shadow:0 0 8px var(--green)}
+  .s-draft .dot{background:var(--dim)}
+  .prog{display:flex;align-items:center;gap:9px;min-width:170px}
+  .track{flex:1;height:4px;border-radius:99px;background:#232530}
+  .fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#8b7cf7,#c084fc);box-shadow:0 0 10px rgba(139,124,247,.5)}
+  .fill.g{background:linear-gradient(90deg,#2bbd85,#3fdd9d);box-shadow:0 0 10px rgba(63,221,157,.4)}
+  .pn{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .mut{color:var(--dim)}
+  .footer{color:var(--dim);font-size:11.5px;text-align:center;padding:22px}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="brand"><span class="mark">dF</span> devFlo</div>
+    <a class="on" href="#">▤ Campaigns <span class="k">G C</span></a>
+    <a href="#">⚠ Security alerts <span class="k">G A</span></a>
+    <a href="#">◲ Repos</a>
+    <div class="sec">Views</div>
+    <a href="#">◔ Awaiting approval</a>
+    <a href="#">✗ Needs attention</a>
+    <a href="#">↗ Completed</a>
+    <div class="foot"><span class="dotu">VK</span> Developer · platform ▾</div>
+  </aside>
+  <main>
+    <div class="top">
+      <h1><span class="crumb">devFlo /</span> Campaigns</h1>
+      <span class="right"><button class="ghost">Filter</button><button class="btn">+ New campaign</button></span>
+    </div>
+    <div class="stats">
+      <div class="stat glow-a"><div class="l">Awaiting your approval</div><div class="v">3</div><div class="s">oldest waiting 12d</div></div>
+      <div class="stat glow-r"><div class="l">Needs attention</div><div class="v">2</div><div class="s">tests failed · blocked</div></div>
+      <div class="stat"><div class="l">Campaigns in flight</div><div class="v">3</div><div class="s">1 completed this quarter</div></div>
+      <div class="stat"><div class="l">Repos remediated</div><div class="v">14<span style="font-size:14px;color:var(--dim)">/22</span></div><div class="s">64% completion</div></div>
+    </div>
+    <div class="banner"><span class="pulse"></span><span><b>3 items awaiting human approval.</b>&nbsp;Nothing executes until sign-off — <code>devflo approve camp-npm-dependabot</code></span></div>
+    <div class="list">
+      <div class="lh">All campaigns <span class="cnt">4</span><span style="margin-left:auto">sorted by activity</span></div>
+      <table>
+        <thead><tr><th>Campaign</th><th>Status</th><th>Owner</th><th>Repos</th><th>Progress</th><th>Updated</th></tr></thead>
+        <tbody>
+          <tr><td><b>Dependabot criticals — June wave 2</b><div class="meta"><span class="type">npm-dependabot</span><span class="w">● 2 awaiting approval</span><span class="d">▲ 2 need attention</span></div></td>
+            <td><span class="st s-prog"><span class="dot"></span>In progress</span></td><td class="mut">platform-team</td><td>9</td>
+            <td><div class="prog"><div class="track"><div class="fill" style="width:22%"></div></div><span class="pn">2/9</span></div></td><td class="mut">2d ago</td></tr>
+          <tr><td><b>Node.js 18 EOL — upgrade to 20 LTS</b><div class="meta"><span class="type">node-version-upgrade</span><span class="w">● 4 awaiting approval</span></div></td>
+            <td><span class="st s-wait"><span class="dot"></span>Awaiting approval</span></td><td class="mut">platform-team</td><td>6</td>
+            <td><div class="prog"><div class="track"><div class="fill" style="width:0%"></div></div><span class="pn">0/6</span></div></td><td class="mut">3d ago</td></tr>
+          <tr><td><b>React Native 0.74 → 0.76</b><div class="meta"><span class="type">react-native-upgrade</span></div></td>
+            <td><span class="st s-draft"><span class="dot"></span>Draft</span></td><td class="mut">mobile-team</td><td>2</td>
+            <td><div class="prog"><div class="track"><div class="fill" style="width:0%"></div></div><span class="pn">0/2</span></div></td><td class="mut">4d ago</td></tr>
+          <tr><td><b>Gradle toolchain refresh — AGP 8.7</b><div class="meta"><span class="type">gradle-dependency-update</span></div></td>
+            <td><span class="st s-done"><span class="dot"></span>Completed</span></td><td class="mut">mobile-team</td><td>4</td>
+            <td><div class="prog"><div class="track"><div class="fill g" style="width:80%"></div></div><span class="pn">4/5</span></div></td><td class="mut">1mo ago</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="footer">Design mock B · “Midnight” — Linear-inspired dark · sidebar nav, glowing status dots, keyboard hints</p>
+  </main>
+</div>
+</body>
+</html>

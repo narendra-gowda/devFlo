@@ -4,6 +4,7 @@ import { Info } from "lucide-react";
 import { api } from "../api/client";
 import { useCampaigns, useRepos } from "../api/hooks";
 import { useRole } from "../context/role";
+import { btnPrimary, input, pageTitle, panel } from "../components/ui";
 
 /**
  * Phase 1 create SHELL. It captures the shape Phase 4 self-service creation
@@ -41,9 +42,9 @@ export function CreateCampaign() {
 
   if (!can.create) {
     return (
-      <p className="text-slate-600">
+      <p className="text-muted">
         The stakeholder view is read-only. Switch role to create campaigns.{" "}
-        <Link to="/" className="text-blue-600 hover:underline">← Back</Link>
+        <Link to="/" className="text-accent2 hover:underline">← Back</Link>
       </p>
     );
   }
@@ -77,64 +78,62 @@ export function CreateCampaign() {
     }
   }
 
-  const inputCls =
-    "w-full rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm focus:border-blue-500 focus:outline-none";
-
   return (
     <div className="max-w-2xl space-y-4">
-      <Link to="/" className="text-sm text-blue-600 hover:underline">← All campaigns</Link>
-      <h1 className="text-lg font-semibold text-slate-900">Create campaign</h1>
+      <Link to="/" className="text-sm text-muted hover:text-ink">← All campaigns</Link>
+      <h1 className={pageTitle}>Create campaign</h1>
 
-      <div className="flex gap-2 rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-900">
-        <Info className="h-5 w-5 shrink-0 text-blue-500" />
+      <div className="flex gap-2.5 rounded-[10px] border border-info/25 bg-info/[.07] px-4 py-3 text-sm text-ink/90">
+        <Info className="h-5 w-5 shrink-0 text-info" />
         <p>
-          Phase 1 writes a <strong>DRAFT</strong> manifest to <code className="font-mono text-xs">manifests/campaigns/</code>.
+          Phase 1 writes a <strong>DRAFT</strong> manifest to <code className="font-mono text-xs text-info">manifests/campaigns/</code>.
           The adapter's <code className="font-mono text-xs">detect()</code>/<code className="font-mono text-xs">plan()</code> (run
           via the CLI) fills in the real items; approval and execution stay gated. Full self-service
           creation with a campaign registry arrives in Phase 4.
         </p>
       </div>
 
-      <form onSubmit={submit} className="space-y-4 rounded-lg border border-slate-200 bg-white p-5">
+      <form onSubmit={submit} className={`space-y-4 ${panel} p-5`}>
         <label className="block text-sm">
-          <span className="font-medium text-slate-700">Campaign type</span>
+          <span className="font-medium text-ink">Campaign type</span>
           <input
             required
             list="campaign-types"
             value={campaignType}
             onChange={(e) => setCampaignType(e.target.value)}
             placeholder="e.g. npm-dependabot"
-            className={`mt-1 ${inputCls} font-mono`}
+            className={`mt-1 ${input} font-mono`}
           />
           <datalist id="campaign-types">
             {knownTypes.map((t) => <option key={t} value={t} />)}
           </datalist>
-          <span className="mt-0.5 block text-xs text-slate-400">Adapter identifier — free text; the UI has no hardcoded type list.</span>
+          <span className="mt-0.5 block text-xs text-dim">Adapter identifier — free text; the UI has no hardcoded type list.</span>
         </label>
 
         <label className="block text-sm">
-          <span className="font-medium text-slate-700">Title</span>
+          <span className="font-medium text-ink">Title</span>
           <input required value={title} onChange={(e) => setTitle(e.target.value)}
-            placeholder="e.g. Node.js 22 LTS upgrade — Q3" className={`mt-1 ${inputCls}`} />
+            placeholder="e.g. Node.js 22 LTS upgrade — Q3" className={`mt-1 ${input}`} />
         </label>
 
         <label className="block text-sm">
-          <span className="font-medium text-slate-700">Owner (team or individual)</span>
-          <input required value={owner} onChange={(e) => setOwner(e.target.value)} className={`mt-1 ${inputCls}`} />
+          <span className="font-medium text-ink">Owner (team or individual)</span>
+          <input required value={owner} onChange={(e) => setOwner(e.target.value)} className={`mt-1 ${input}`} />
         </label>
 
         <fieldset className="text-sm">
-          <legend className="font-medium text-slate-700">Target repos ({selected.size} selected)</legend>
+          <legend className="font-medium text-ink">Target repos ({selected.size} selected)</legend>
           <div className="mt-2 grid gap-4 sm:grid-cols-2">
             {[...reposByOrg.entries()].map(([org, repos]) => (
               <div key={org}>
-                <p className="mb-1 font-mono text-xs text-slate-500">{org}</p>
+                <p className="mb-1 font-mono text-xs text-dim">{org}</p>
                 {repos.map((r) => {
                   const key = `${r.org}/${r.repo}`;
                   return (
-                    <label key={key} className="flex items-center gap-2 py-0.5">
+                    <label key={key} className="flex items-center gap-2 py-0.5 text-ink/90">
                       <input
                         type="checkbox"
+                        className="accent-[#8b7cf7]"
                         checked={selected.has(key)}
                         onChange={(e) => {
                           const next = new Set(selected);
@@ -143,7 +142,7 @@ export function CreateCampaign() {
                         }}
                       />
                       <span>{r.repo}</span>
-                      <span className="text-xs text-slate-400">{r.team}</span>
+                      <span className="text-xs text-dim">{r.team}</span>
                     </label>
                   );
                 })}
@@ -153,26 +152,22 @@ export function CreateCampaign() {
         </fieldset>
 
         <label className="block text-sm">
-          <span className="font-medium text-slate-700">Adapter config (JSON, optional)</span>
+          <span className="font-medium text-ink">Adapter config (JSON, optional)</span>
           <textarea
             value={configText}
             onChange={(e) => setConfigText(e.target.value)}
             rows={4}
             placeholder='{ "targetVersion": "22.11.0" }'
-            className={`mt-1 ${inputCls} font-mono text-xs`}
+            className={`mt-1 ${input} font-mono text-xs`}
           />
-          <span className="mt-0.5 block text-xs text-slate-400">
-            Passed to the adapter untouched. Schema v1.0 parks this in item metadata — a top-level config field is a v1.1 candidate.
+          <span className="mt-0.5 block text-xs text-dim">
+            Passed to the adapter untouched. Schema v1.1 parks this in item metadata — a top-level config field is a future candidate.
           </span>
         </label>
 
-        {error && <p className="text-sm text-red-600">{error}</p>}
+        {error && <p className="text-sm text-danger">{error}</p>}
 
-        <button
-          type="submit"
-          disabled={submitting || selected.size === 0}
-          className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
-        >
+        <button type="submit" disabled={submitting || selected.size === 0} className={btnPrimary}>
           {submitting ? "Writing manifest…" : "Create DRAFT manifest"}
         </button>
       </form>

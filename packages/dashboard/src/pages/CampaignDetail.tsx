@@ -20,6 +20,7 @@ import { ProgressBar } from "../components/ProgressBar";
 import { ApprovalBanner } from "../components/ApprovalBanner";
 import { MetadataTable } from "../components/MetadataTable";
 import { UnitsTable } from "../components/UnitsTable";
+import { panel, thBase } from "../components/ui";
 import { MatrixView } from "./MatrixView";
 import { daysSince, fmtDate } from "../lib/format";
 
@@ -37,7 +38,7 @@ function AgeChip({ item }: { item: CampaignItem }) {
   const stale = isItemOpen(item) && days > 7;
   return (
     <span
-      className={`text-xs tabular-nums whitespace-nowrap ${stale ? "font-semibold text-red-600" : "text-slate-500"}`}
+      className={`whitespace-nowrap text-xs tabular-nums ${stale ? "font-semibold text-danger" : "text-dim"}`}
       title={`In this status since ${fmtDate(item.statusUpdatedAt)}`}
     >
       {days}d{stale ? " ⚠" : ""}
@@ -49,18 +50,18 @@ function LinkCell({ item }: { item: CampaignItem }) {
   return (
     <div className="flex gap-3 text-xs">
       {item.prUrl ? (
-        <a href={item.prUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-0.5 text-blue-600 hover:underline">
+        <a href={item.prUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-0.5 text-accent2 hover:underline">
           PR <ExternalLink className="h-3 w-3" />
         </a>
       ) : (
-        <span className="text-slate-300">PR</span>
+        <span className="text-edge2">PR</span>
       )}
       {item.adoTicketUrl ? (
-        <a href={item.adoTicketUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-0.5 text-blue-600 hover:underline">
+        <a href={item.adoTicketUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-0.5 text-accent2 hover:underline">
           ADO <ExternalLink className="h-3 w-3" />
         </a>
       ) : (
-        <span className="text-slate-300">ADO</span>
+        <span className="text-edge2">ADO</span>
       )}
     </div>
   );
@@ -69,14 +70,14 @@ function LinkCell({ item }: { item: CampaignItem }) {
 function ExpandedDetail({ campaign, item, colSpan }: { campaign: CampaignManifest; item: CampaignItem; colSpan: number }) {
   const attention = ATTENTION_STATUSES.includes(item.status);
   return (
-    <tr className={attention ? "border-l-4 border-l-red-500" : ""}>
+    <tr className={attention ? "border-l-4 border-l-danger" : ""}>
       <td />
-      <td colSpan={colSpan} className="bg-slate-50 px-3 py-3 space-y-3">
-        <p className="text-sm text-slate-700">{item.description}</p>
+      <td colSpan={colSpan} className="space-y-3 bg-panel2/60 px-3 py-3">
+        <p className="text-sm text-ink/90">{item.description}</p>
         {item.units && item.units.length > 0 && <UnitsTable units={item.units} />}
         {Object.keys(item.metadata).length > 0 && (
           <div>
-            <p className="mb-1 text-xs font-medium uppercase tracking-wide text-slate-400">
+            <p className="mb-1 text-[10.5px] font-semibold uppercase tracking-[.07em] text-dim">
               Adapter metadata ({campaign.campaignType})
             </p>
             <MetadataTable metadata={item.metadata} />
@@ -86,6 +87,9 @@ function ExpandedDetail({ campaign, item, colSpan }: { campaign: CampaignManifes
     </tr>
   );
 }
+
+const rowCls = (attention: boolean) =>
+  `cursor-pointer hover:bg-panel2/70 ${attention ? "border-l-4 border-l-danger bg-danger/[.06]" : ""}`;
 
 /**
  * Table layout for campaigns whose items carry fix units (e.g. security
@@ -104,58 +108,53 @@ function UnitCountsTable({ campaign, items }: { campaign: CampaignManifest; item
   };
 
   return (
-    <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white">
+    <div className={`overflow-x-auto ${panel}`}>
       <table className="w-full text-sm">
-        <thead className="border-b border-slate-200 bg-slate-50 text-left text-xs font-medium uppercase tracking-wide text-slate-500">
+        <thead className="border-b border-edge">
           <tr>
-            <th className="w-8 px-2 py-2.5" />
-            <th className="px-2 py-2.5">Repo</th>
+            <th className="w-8 px-2 py-2" />
+            <th className={thBase.replace("px-4", "px-2")}>Repo</th>
             {categories.map((c) => (
-              <th key={c} className="px-3 py-2.5 text-center">{c.replaceAll("_", " ")}</th>
+              <th key={c} className={`${thBase} text-center`}>{c.replaceAll("_", " ")}</th>
             ))}
-            <th className="px-3 py-2.5 text-center">Total</th>
-            <th className="px-3 py-2.5">Status</th>
-            <th className="px-3 py-2.5" title="Days in current status">Age</th>
-            <th className="px-3 py-2.5">Links</th>
+            <th className={`${thBase} text-center`}>Total</th>
+            <th className={thBase}>Status</th>
+            <th className={thBase} title="Days in current status">Age</th>
+            <th className={thBase}>Links</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-100">
+        <tbody className="divide-y divide-edge/60">
           {items.map((item) => {
             const { byCategory, total } = unitCounts(item);
             const attention = ATTENTION_STATUSES.includes(item.status);
             const open = expanded.has(item.itemId);
             return (
-              <UnitRow
+              <Rows
                 key={item.itemId}
-                open={open}
-                onToggle={() => toggle(item.itemId)}
                 row={
-                  <tr
-                    className={`cursor-pointer hover:bg-slate-50 ${attention ? "border-l-4 border-l-red-500 bg-red-50/60" : ""}`}
-                    onClick={() => toggle(item.itemId)}
-                  >
-                    <td className="px-2 py-2.5 text-slate-400">
+                  <tr className={rowCls(attention)} onClick={() => toggle(item.itemId)}>
+                    <td className="px-2 py-2.5 text-dim">
                       {open ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
                     </td>
                     <td className="px-2 py-2.5">
-                      <span className="font-medium text-slate-800">
-                        {attention && <AlertTriangle className="mr-1 inline h-4 w-4 text-red-600" />}
+                      <span className="font-semibold text-ink">
+                        {attention && <AlertTriangle className="mr-1 inline h-4 w-4 text-danger" />}
                         {item.repo}
                       </span>
-                      <span className="block text-xs text-slate-500">{item.org}</span>
+                      <span className="block text-xs text-dim">{item.org}</span>
                     </td>
                     {categories.map((c) => {
                       const n = byCategory[c] ?? 0;
                       return (
                         <td key={c} className="px-3 py-2.5 text-center tabular-nums">
-                          {n > 0 ? <span className="font-semibold text-slate-800">{n}</span> : <span className="text-slate-300">·</span>}
+                          {n > 0 ? <span className="font-semibold text-ink">{n}</span> : <span className="text-edge2">·</span>}
                         </td>
                       );
                     })}
-                    <td className="px-3 py-2.5 text-center tabular-nums font-semibold text-slate-800">{total}</td>
+                    <td className="px-3 py-2.5 text-center font-semibold tabular-nums text-ink">{total}</td>
                     <td className="px-3 py-2.5"><ItemStatusBadge status={item.status} /></td>
                     <td className="px-3 py-2.5"><AgeChip item={item} /></td>
-                    <td className="px-3 py-2.5 whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
+                    <td className="whitespace-nowrap px-3 py-2.5" onClick={(e) => e.stopPropagation()}>
                       <LinkCell item={item} />
                     </td>
                   </tr>
@@ -171,7 +170,7 @@ function UnitCountsTable({ campaign, items }: { campaign: CampaignManifest; item
 }
 
 /** Helper to render a row + optional detail row without extra DOM nesting. */
-function UnitRow({ row, detail }: { open: boolean; onToggle: () => void; row: React.ReactNode; detail: React.ReactNode }) {
+function Rows({ row, detail }: { row: React.ReactNode; detail: React.ReactNode }) {
   return (
     <>
       {row}
@@ -190,48 +189,43 @@ function PlainItemsTable({ campaign, items }: { campaign: CampaignManifest; item
   };
 
   return (
-    <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white">
+    <div className={`overflow-x-auto ${panel}`}>
       <table className="w-full text-sm">
-        <thead className="border-b border-slate-200 bg-slate-50 text-left text-xs font-medium uppercase tracking-wide text-slate-500">
+        <thead className="border-b border-edge">
           <tr>
-            <th className="w-8 px-2 py-2.5" />
-            <th className="px-2 py-2.5">Repo</th>
-            <th className="px-3 py-2.5">Change</th>
-            <th className="px-3 py-2.5">Strategy</th>
-            <th className="px-3 py-2.5">Status</th>
-            <th className="px-3 py-2.5" title="Days in current status">Age</th>
-            <th className="px-3 py-2.5">Links</th>
+            <th className="w-8 px-2 py-2" />
+            <th className={thBase.replace("px-4", "px-2")}>Repo</th>
+            <th className={thBase}>Change</th>
+            <th className={thBase}>Strategy</th>
+            <th className={thBase}>Status</th>
+            <th className={thBase} title="Days in current status">Age</th>
+            <th className={thBase}>Links</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-100">
+        <tbody className="divide-y divide-edge/60">
           {items.map((item) => {
             const attention = ATTENTION_STATUSES.includes(item.status);
             const open = expanded.has(item.itemId);
             return (
-              <UnitRow
+              <Rows
                 key={item.itemId}
-                open={open}
-                onToggle={() => toggle(item.itemId)}
                 row={
-                  <tr
-                    className={`cursor-pointer hover:bg-slate-50 ${attention ? "border-l-4 border-l-red-500 bg-red-50/60" : ""}`}
-                    onClick={() => toggle(item.itemId)}
-                  >
-                    <td className="px-2 py-2.5 text-slate-400">
+                  <tr className={rowCls(attention)} onClick={() => toggle(item.itemId)}>
+                    <td className="px-2 py-2.5 text-dim">
                       {open ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
                     </td>
                     <td className="px-2 py-2.5">
-                      <span className="font-medium text-slate-800">{item.repo}</span>
-                      <span className="block text-xs text-slate-500">{item.org}</span>
+                      <span className="font-semibold text-ink">{item.repo}</span>
+                      <span className="block text-xs text-dim">{item.org}</span>
                     </td>
-                    <td className="px-3 py-2.5 text-slate-700">
-                      {attention && <AlertTriangle className="mr-1 inline h-4 w-4 text-red-600" />}
+                    <td className="px-3 py-2.5 text-ink/85">
+                      {attention && <AlertTriangle className="mr-1 inline h-4 w-4 text-danger" />}
                       {item.description}
                     </td>
                     <td className="px-3 py-2.5"><StrategyBadge strategy={item.strategy} /></td>
                     <td className="px-3 py-2.5"><ItemStatusBadge status={item.status} /></td>
                     <td className="px-3 py-2.5"><AgeChip item={item} /></td>
-                    <td className="px-3 py-2.5 whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
+                    <td className="whitespace-nowrap px-3 py-2.5" onClick={(e) => e.stopPropagation()}>
                       <LinkCell item={item} />
                     </td>
                   </tr>
@@ -260,12 +254,12 @@ export function CampaignDetail() {
     return [...scoped].sort((a, b) => itemSortKey(a) - itemSortKey(b));
   }, [campaign, reposQ.data, role, team]);
 
-  if (campaignQ.loading || reposQ.loading) return <p className="text-slate-500">Loading…</p>;
+  if (campaignQ.loading || reposQ.loading) return <p className="text-muted">Loading…</p>;
   if (campaignQ.error || !campaign || !reposQ.data)
     return (
       <div>
-        <p className="text-red-600">Campaign not found: {campaignQ.error}</p>
-        <Link to="/" className="text-blue-600 hover:underline text-sm">← Back to campaigns</Link>
+        <p className="text-danger">Campaign not found: {campaignQ.error}</p>
+        <Link to="/" className="text-sm text-accent2 hover:underline">← Back to campaigns</Link>
       </div>
     );
 
@@ -275,15 +269,20 @@ export function CampaignDetail() {
 
   return (
     <div className="space-y-4">
-      <Link to="/" className="text-sm text-blue-600 hover:underline">← All campaigns</Link>
+      <Link to="/" className="text-sm text-muted hover:text-ink">← All campaigns</Link>
 
-      <div className="rounded-lg border border-slate-200 bg-white px-5 py-4">
+      <div className={`${panel} px-5 py-4`}>
         <div className="flex flex-wrap items-center gap-3">
-          <h1 className="text-lg font-semibold text-slate-900">{campaign.title}</h1>
+          <h1 className="text-[17px] font-semibold tracking-tight text-ink">{campaign.title}</h1>
           <CampaignStatusBadge status={campaign.status} />
         </div>
-        <div className="mt-2 flex flex-wrap items-center gap-x-6 gap-y-1 text-sm text-slate-600">
-          <span>Type: <code className="rounded bg-slate-100 px-1 font-mono text-xs">{campaign.campaignType}</code></span>
+        <div className="mt-2 flex flex-wrap items-center gap-x-6 gap-y-1 text-sm text-muted">
+          <span>
+            Type:{" "}
+            <code className="rounded-[5px] border border-accent2/20 bg-accent2/[.09] px-1.5 py-px font-mono text-[10.5px] text-accent2">
+              {campaign.campaignType}
+            </code>
+          </span>
           <span>Owner: {campaign.owner}</span>
           <span>Created {fmtDate(campaign.createdAt)}</span>
           <span>Updated {fmtDate(campaign.updatedAt)}</span>
@@ -298,16 +297,16 @@ export function CampaignDetail() {
         campaignId={campaign.campaignId}
       />
 
-      <div className="flex gap-1 border-b border-slate-200">
+      <div className="flex gap-1 border-b border-edge">
         {(["items", "matrix"] as const).map((t) =>
           t === "matrix" && !hasMatrix ? null : (
             <button
               key={t}
               onClick={() => setTab(t)}
-              className={`px-4 py-2 text-sm font-medium -mb-px border-b-2 ${
+              className={`-mb-px cursor-pointer border-b-2 px-4 py-2 text-sm font-medium ${
                 tab === t
-                  ? "border-blue-600 text-blue-700"
-                  : "border-transparent text-slate-500 hover:text-slate-800"
+                  ? "border-accent text-accent2"
+                  : "border-transparent text-muted hover:text-ink"
               }`}
             >
               {t === "items" ? `Repos (${items.length})` : "Issue × repo matrix"}
@@ -318,7 +317,7 @@ export function CampaignDetail() {
 
       {tab === "items" ? (
         items.length === 0 ? (
-          <p className="px-1 py-6 text-center text-slate-400">
+          <p className="px-1 py-6 text-center text-dim">
             No items in this campaign affect {team}'s repos.
           </p>
         ) : unitsLayout ? (
