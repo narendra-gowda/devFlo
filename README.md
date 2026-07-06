@@ -41,7 +41,20 @@ GITHUB_TOKEN=ghp_xxx npm run dashboard   # live mode (token needs security_event
 npm run dashboard                        # mock fixture: packages/server/fixtures/alerts.mock.json
 ```
 
-Alternatively put the token in `packages/server/.env` (`GITHUB_TOKEN=ghp_xxx`) — loaded at server boot via Node's built-in `loadEnvFile` (requires Node >= 20.12). Shell env vars take precedence. Don't commit the file; it's gitignored.
+Alternatively put tokens in `packages/server/.env` — loaded at server boot via Node's built-in `loadEnvFile` (requires Node >= 20.12). Shell env vars take precedence. Don't commit the file; it's gitignored.
+
+**Per-org tokens** (when one PAT can't cover all orgs): resolved by naming convention, no mapping in code. For org `X` the server reads `GITHUB_TOKEN_<X>` with the org name uppercased and runs of non-alphanumerics replaced by `_`, falling back to `GITHUB_TOKEN`:
+
+```bash
+# packages/server/.env
+GITHUB_TOKEN_ETS=ghp_xxx
+GITHUB_TOKEN_RSP=ghp_yyy
+GITHUB_TOKEN_HFSS=ghp_zzz
+GITHUB_TOKEN_S_G=ghp_www     # org "S&G" — & normalises to _
+GITHUB_TOKEN=ghp_fallback    # optional: used for any org without its own token
+```
+
+Onboarding a new org = add its repos to `manifests/repos.json` + one token line here. Orgs with no resolvable token show their repos as empty (a warning is logged at startup naming the exact env var to set).
 
 Server responses are cached 60s (`CACHE_TTL_MS` in `routes/alerts.ts`) — tune together with `ALERTS_REFRESH_MS` in the dashboard. Repos where Dependabot/code scanning is disabled (GitHub returns 403/404) show as empty rather than erroring.
 
