@@ -41,6 +41,8 @@ GITHUB_TOKEN=ghp_xxx npm run dashboard   # live mode (token needs security_event
 npm run dashboard                        # mock fixture: packages/server/fixtures/alerts.mock.json
 ```
 
+Alternatively put the token in `packages/server/.env` (`GITHUB_TOKEN=ghp_xxx`) — loaded at server boot via Node's built-in `loadEnvFile` (requires Node >= 20.12). Shell env vars take precedence. Don't commit the file; it's gitignored.
+
 Server responses are cached 60s (`CACHE_TTL_MS` in `routes/alerts.ts`) — tune together with `ALERTS_REFRESH_MS` in the dashboard. Repos where Dependabot/code scanning is disabled (GitHub returns 403/404) show as empty rather than erroring.
 
 ## Swapping mock data for real CLI output

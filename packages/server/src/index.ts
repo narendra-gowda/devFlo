@@ -1,7 +1,19 @@
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import Fastify from "fastify";
 import { campaignRoutes } from "./routes/campaigns.js";
 import { repoRoutes } from "./routes/repos.js";
 import { alertRoutes } from "./routes/alerts.js";
+
+// Load packages/server/.env if present (GITHUB_TOKEN, PORT, ...).
+// Uses Node's built-in loader (>= 20.12) — no dotenv dependency needed.
+// Values already set in the shell take precedence and are not overwritten.
+try {
+  process.loadEnvFile(path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../.env"));
+  console.log("loaded .env");
+} catch {
+  /* no .env file — fine, mock mode for alerts */
+}
 
 const app = Fastify({ logger: true });
 

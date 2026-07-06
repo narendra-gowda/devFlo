@@ -55,16 +55,21 @@ interface GhCodeScanningAlert {
 }
 
 async function gh<T>(url: string, token: string): Promise<T | null> {
-  const res = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      Accept: "application/vnd.github+json",
-      "X-GitHub-Api-Version": "2022-11-28",
-    },
-  });
-  // 403/404 → Dependabot/code scanning not enabled or no access: treat as empty
-  if (!res.ok) return null;
-  return (await res.json()) as T;
+  try {
+    const res = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+      },
+    });
+    // 403/404 → Dependabot/code scanning not enabled or no access: treat as empty
+    if (!res.ok) return null;
+    return (await res.json()) as T;
+  } catch {
+    // Network failure for one repo must not 500 the whole consolidated view.
+    return null;
+  }
 }
 
 async function fetchLiveRepo(org: string, repo: string, token: string): Promise<RepoAlerts> {
