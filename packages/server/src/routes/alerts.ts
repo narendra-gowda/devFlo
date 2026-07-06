@@ -2,12 +2,13 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { FastifyInstance } from "fastify";
-import type {
-  AlertSeverity,
-  AlertsResponse,
-  CodeScanningAlert,
-  DependabotAlert,
-  RepoAlerts,
+import {
+  ALERT_SEVERITIES,
+  type AlertSeverity,
+  type AlertsResponse,
+  type CodeScanningAlert,
+  type DependabotAlert,
+  type RepoAlerts,
 } from "@devflo/schema";
 import { readRepoRegistry } from "../lib/manifest-store.js";
 
@@ -104,6 +105,22 @@ async function fetchLiveRepo(org: string, repo: string, token: string): Promise<
   };
 }
 
+/**
+ * Canonical package order within each repo: critical > high > moderate > low,
+ * then package name. Sorted once per cache fill so every consumer gets the
+ * same fixed order.
+ */
+function sortAlerts(repos: RepoAlerts[]): RepoAlerts[] {
+  for (const repo of repos) {
+    repo.dependabot.sort(
+      (a, b) =>
+        ALERT_SEVERITIES.indexOf(a.severity) - ALERT_SEVERITIES.indexOf(b.severity) ||
+        a.package.localeCompare(b.package)
+    );
+  }
+  return repos;
+}
+
 async function loadAlerts(): Promise<AlertsResponse> {
   const token = process.env.GITHUB_TOKEN;
   if (token) {
@@ -111,10 +128,10 @@ async function loadAlerts(): Promise<AlertsResponse> {
     const repos = await Promise.all(
       registry.repos.map((r) => fetchLiveRepo(r.org, r.repo, token))
     );
-    return { source: "live", fetchedAt: new Date().toISOString(), repos };
+    return { source: "live", fetchedAt: new Date().toISOString(), repos: sortAlerts(repos) };
   }
   const fixture = JSON.parse(await readFile(FIXTURE, "utf8")) as { repos: RepoAlerts[] };
-  return { source: "mock", fetchedAt: new Date().toISOString(), repos: fixture.repos };
+  return { source: "mock", fetchedAt: new Date().toISOString(), repos: sortAlerts(fixture.repos) };
 }
 
 export async function alertRoutes(app: FastifyInstance) {
