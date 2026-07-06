@@ -10,7 +10,7 @@ import { useCampaigns, useRepos } from "../api/hooks";
 import { useRole } from "../context/role";
 import { teamRepoKeys, visibleItems } from "../lib/roles";
 import { ItemStatusBadge } from "../components/badges";
-import { pageTitle, panel, thBase } from "../components/ui";
+import { pageTitle, panel, thBase, thCenter } from "../components/ui";
 import { daysSince, fmtDate } from "../lib/format";
 
 /**
@@ -83,16 +83,16 @@ export function QueuePage({ type }: { type: QueueType }) {
               <th className={thBase}>Repo</th>
               <th className={thBase}>Change</th>
               <th className={thBase}>Campaign</th>
-              <th className={thBase}>Status</th>
-              <th className={thBase} title="Days in current status">Age</th>
-              <th className={thBase}>Links</th>
+              <th className={thCenter}>Status</th>
+              <th className={thCenter} title="Days in current status">Age</th>
+              <th className={thCenter}>Links</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-edge/60">
             {rows.map(({ campaign, item }) => {
               const stale = type !== "completed" && daysSince(item.statusUpdatedAt) > 7;
               return (
-                <tr key={item.itemId} className="hover:bg-panel2/70">
+                <tr key={item.itemId} className="hover:bg-hover">
                   <td className="px-4 py-2.5">
                     <span className="font-semibold text-ink">{item.repo}</span>
                     <span className="block text-xs text-dim">{item.org}</span>
@@ -103,15 +103,15 @@ export function QueuePage({ type }: { type: QueueType }) {
                       {campaign.title}
                     </Link>
                   </td>
-                  <td className="px-4 py-2.5"><ItemStatusBadge status={item.status} /></td>
+                  <td className="px-4 py-2.5 text-center"><ItemStatusBadge status={item.status} /></td>
                   <td
-                    className={`whitespace-nowrap px-4 py-2.5 text-xs tabular-nums ${stale ? "font-semibold text-danger" : "text-dim"}`}
+                    className={`whitespace-nowrap px-4 py-2.5 text-center text-xs tabular-nums ${stale ? "font-semibold text-danger" : "text-dim"}`}
                     title={`Since ${fmtDate(item.statusUpdatedAt)}`}
                   >
                     {daysSince(item.statusUpdatedAt)}d{stale ? " ⚠" : ""}
                   </td>
                   <td className="whitespace-nowrap px-4 py-2.5">
-                    <div className="flex gap-3 text-xs">
+                    <div className="flex justify-center gap-3 text-xs">
                       {item.prUrl && (
                         <a href={item.prUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-0.5 text-accent2 hover:underline">
                           PR <ExternalLink className="h-3 w-3" />

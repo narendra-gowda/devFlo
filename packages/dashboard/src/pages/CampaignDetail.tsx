@@ -21,6 +21,7 @@ import { ApprovalBanner } from "../components/ApprovalBanner";
 import { MetadataTable } from "../components/MetadataTable";
 import { UnitsTable } from "../components/UnitsTable";
 import { panel, thBase, thCenter } from "../components/ui";
+import { severityTone } from "../lib/severity";
 import { MatrixView } from "./MatrixView";
 import { daysSince, fmtDate } from "../lib/format";
 
@@ -48,7 +49,7 @@ function AgeChip({ item }: { item: CampaignItem }) {
 
 function LinkCell({ item }: { item: CampaignItem }) {
   return (
-    <div className="flex gap-3 text-xs">
+    <div className="flex justify-center gap-3 text-xs">
       {item.prUrl ? (
         <a href={item.prUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-0.5 text-accent2 hover:underline">
           PR <ExternalLink className="h-3 w-3" />
@@ -71,8 +72,11 @@ function ExpandedDetail({ campaign, item, colSpan }: { campaign: CampaignManifes
   const attention = ATTENTION_STATUSES.includes(item.status);
   return (
     <tr className={attention ? "border-l-4 border-l-danger" : ""}>
-      <td />
-      <td colSpan={colSpan} className="space-y-3 bg-panel2/60 px-3 py-3">
+      {/* Single full-width cell so the inset colour runs edge to edge. */}
+      <td
+        colSpan={colSpan}
+        className="space-y-3 bg-panel3 px-4 py-3 shadow-[inset_0_4px_8px_-4px_rgba(0,0,0,.6),inset_0_-4px_8px_-4px_rgba(0,0,0,.5)]"
+      >
         <p className="text-sm text-ink/90">{item.description}</p>
         {item.units && item.units.length > 0 && <UnitsTable units={item.units} />}
         {Object.keys(item.metadata).length > 0 && (
@@ -89,7 +93,7 @@ function ExpandedDetail({ campaign, item, colSpan }: { campaign: CampaignManifes
 }
 
 const rowCls = (attention: boolean) =>
-  `cursor-pointer hover:bg-panel2/70 ${attention ? "border-l-4 border-l-danger bg-danger/[.06]" : ""}`;
+  `cursor-pointer hover:bg-hover ${attention ? "border-l-4 border-l-danger bg-danger/[.06]" : ""}`;
 
 /**
  * Table layout for campaigns whose items carry fix units (e.g. security
@@ -99,7 +103,8 @@ const rowCls = (attention: boolean) =>
 function UnitCountsTable({ campaign, items }: { campaign: CampaignManifest; items: CampaignItem[] }) {
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
   const categories = campaignUnitCategories(campaign);
-  const colSpan = categories.length + 4;
+  // chevron + repo + categories + total + status + age + links
+  const colSpan = categories.length + 6;
 
   const toggle = (id: string) => {
     const next = new Set(expanded);
@@ -118,9 +123,9 @@ function UnitCountsTable({ campaign, items }: { campaign: CampaignManifest; item
               <th key={c} className={thCenter}>{c.replaceAll("_", " ")}</th>
             ))}
             <th className={thCenter}>Total</th>
-            <th className={thBase}>Status</th>
-            <th className={thBase} title="Days in current status">Age</th>
-            <th className={thBase}>Links</th>
+            <th className={thCenter}>Status</th>
+            <th className={thCenter} title="Days in current status">Age</th>
+            <th className={thCenter}>Links</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-edge/60">
@@ -147,13 +152,13 @@ function UnitCountsTable({ campaign, items }: { campaign: CampaignManifest; item
                       const n = byCategory[c] ?? 0;
                       return (
                         <td key={c} className="px-3 py-2.5 text-center tabular-nums">
-                          {n > 0 ? <span className="font-semibold text-ink">{n}</span> : <span className="text-edge2">·</span>}
+                          {n > 0 ? <span className={severityTone(c).count}>{n}</span> : <span className="text-edge2">·</span>}
                         </td>
                       );
                     })}
                     <td className="px-3 py-2.5 text-center font-semibold tabular-nums text-ink">{total}</td>
-                    <td className="px-3 py-2.5"><ItemStatusBadge status={item.status} /></td>
-                    <td className="px-3 py-2.5"><AgeChip item={item} /></td>
+                    <td className="px-3 py-2.5 text-center"><ItemStatusBadge status={item.status} /></td>
+                    <td className="px-3 py-2.5 text-center"><AgeChip item={item} /></td>
                     <td className="whitespace-nowrap px-3 py-2.5" onClick={(e) => e.stopPropagation()}>
                       <LinkCell item={item} />
                     </td>
@@ -196,10 +201,10 @@ function PlainItemsTable({ campaign, items }: { campaign: CampaignManifest; item
             <th className="w-8 px-2 py-2" />
             <th className={thBase.replace("px-4", "px-2")}>Repo</th>
             <th className={thBase}>Change</th>
-            <th className={thBase}>Strategy</th>
-            <th className={thBase}>Status</th>
-            <th className={thBase} title="Days in current status">Age</th>
-            <th className={thBase}>Links</th>
+            <th className={thCenter}>Strategy</th>
+            <th className={thCenter}>Status</th>
+            <th className={thCenter} title="Days in current status">Age</th>
+            <th className={thCenter}>Links</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-edge/60">
@@ -222,15 +227,15 @@ function PlainItemsTable({ campaign, items }: { campaign: CampaignManifest; item
                       {attention && <AlertTriangle className="mr-1 inline h-4 w-4 text-danger" />}
                       {item.description}
                     </td>
-                    <td className="px-3 py-2.5"><StrategyBadge strategy={item.strategy} /></td>
-                    <td className="px-3 py-2.5"><ItemStatusBadge status={item.status} /></td>
-                    <td className="px-3 py-2.5"><AgeChip item={item} /></td>
+                    <td className="px-3 py-2.5 text-center"><StrategyBadge strategy={item.strategy} /></td>
+                    <td className="px-3 py-2.5 text-center"><ItemStatusBadge status={item.status} /></td>
+                    <td className="px-3 py-2.5 text-center"><AgeChip item={item} /></td>
                     <td className="whitespace-nowrap px-3 py-2.5" onClick={(e) => e.stopPropagation()}>
                       <LinkCell item={item} />
                     </td>
                   </tr>
                 }
-                detail={open ? <ExpandedDetail campaign={campaign} item={item} colSpan={6} /> : null}
+                detail={open ? <ExpandedDetail campaign={campaign} item={item} colSpan={7} /> : null}
               />
             );
           })}
@@ -269,7 +274,8 @@ export function CampaignDetail() {
 
   return (
     <div className="space-y-4">
-      <Link to="/" className="text-sm text-muted hover:text-ink">← All campaigns</Link>
+      {/* inline-block so space-y's margin-bottom actually applies (inline elements ignore vertical margins) */}
+      <Link to="/" className="inline-block text-sm text-muted hover:text-ink">← All campaigns</Link>
 
       <div className={`${panel} px-5 py-4`}>
         <div className="flex flex-wrap items-center gap-3">

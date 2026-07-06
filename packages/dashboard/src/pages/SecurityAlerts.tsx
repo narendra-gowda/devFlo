@@ -10,30 +10,19 @@ import { useAlerts, useRepos, ALERTS_REFRESH_MS } from "../api/hooks";
 import { useRole } from "../context/role";
 import { teamRepoKeys } from "../lib/roles";
 import { pageTitle, panel, thBase, thCenter } from "../components/ui";
+import { severityTone } from "../lib/severity";
 
 /**
  * Consolidated live view of GitHub Dependabot + code-scanning alerts.
  * This page is intentionally GitHub-specific (it renders GitHub's own
  * severity taxonomy) — unlike campaign views, which stay ecosystem-agnostic.
+ * Severity colours come from the shared lib/severity mapping so the alerts
+ * page and campaign views always read identically.
  */
-
-const SEVERITY_STYLES: Record<AlertSeverity, string> = {
-  critical: "bg-critical/20 text-critical ring-1 ring-critical/50",
-  high: "bg-high/15 text-high ring-1 ring-high/35",
-  moderate: "bg-caution/15 text-caution ring-1 ring-caution/30",
-  low: "bg-edge2/40 text-muted ring-1 ring-edge2",
-};
-
-const COUNT_STYLES: Record<AlertSeverity, string> = {
-  critical: "font-bold text-critical",
-  high: "font-semibold text-high",
-  moderate: "font-semibold text-caution",
-  low: "font-semibold text-muted",
-};
 
 function SeverityBadge({ severity }: { severity: AlertSeverity }) {
   return (
-    <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${SEVERITY_STYLES[severity]}`}>
+    <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${severityTone(severity).pill}`}>
       {severity}
     </span>
   );
@@ -54,11 +43,12 @@ function AlertDetail({ repo }: { repo: RepoAlerts }) {
     <div className="space-y-3">
       {repo.dependabot.length > 0 && (
         <div className="overflow-x-auto rounded-md border border-edge bg-panel">
-          <table className="w-full text-sm">
+          {/* table-fixed + locked first column so open accordions align with each other */}
+          <table className="w-full table-fixed text-sm">
             <thead className="border-b border-edge text-left text-[10.5px] font-semibold uppercase tracking-[.07em] text-dim">
               <tr>
-                <th className="px-3 py-2">Package</th>
-                <th className="px-3 py-2">Severity</th>
+                <th className="w-64 px-3 py-2">Package</th>
+                <th className="px-3 py-2 text-center">Severity</th>
                 <th className="px-3 py-2">Affected version</th>
                 <th className="px-3 py-2">Fix version</th>
                 <th className="px-3 py-2">CVE</th>
@@ -67,13 +57,13 @@ function AlertDetail({ repo }: { repo: RepoAlerts }) {
             <tbody className="divide-y divide-edge/60">
               {repo.dependabot.map((a, i) => (
                 <tr key={`${a.package}-${a.cveId ?? i}`}>
-                  <td className="px-3 py-2 font-mono text-ink">{a.package}</td>
-                  <td className="px-3 py-2"><SeverityBadge severity={a.severity} /></td>
-                  <td className="px-3 py-2 font-mono text-xs text-ink/80">{a.affectedRange}</td>
-                  <td className="px-3 py-2 font-mono text-xs text-ink/80">
+                  <td className="truncate px-3 py-2 font-mono text-ink" title={a.package}>{a.package}</td>
+                  <td className="px-3 py-2 text-center"><SeverityBadge severity={a.severity} /></td>
+                  <td className="truncate px-3 py-2 font-mono text-xs text-ink/80" title={a.affectedRange}>{a.affectedRange}</td>
+                  <td className="truncate px-3 py-2 font-mono text-xs text-ink/80" title={a.fixVersion}>
                     {a.fixVersion ?? <span className="italic text-dim">no fix yet</span>}
                   </td>
-                  <td className="px-3 py-2">
+                  <td className="truncate px-3 py-2">
                     {a.url ? (
                       <a href={a.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 whitespace-nowrap text-accent2 hover:underline">
                         {a.cveId ?? "advisory"} <ExternalLink className="h-3 w-3" />
@@ -153,7 +143,7 @@ function GroupSection({ title, repos }: { title: string; repos: RepoAlerts[] }) 
               ))}
               <th className={thCenter}>Code scanning</th>
               <th className={thCenter}>Total</th>
-              <th className={thBase}>Link</th>
+              <th className={thCenter}>Link</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-edge/60">
@@ -167,17 +157,20 @@ function GroupSection({ title, repos }: { title: string; repos: RepoAlerts[] }) 
                   key={key}
                   row={
                     <tr
-                      className={`cursor-pointer hover:bg-panel2/70 ${counts.critical > 0 ? "border-l-4 border-l-critical bg-critical/[.05]" : ""}`}
+                      className={`cursor-pointer hover:bg-hover ${counts.critical > 0 ? "border-l-4 border-l-critical bg-critical/[.05]" : ""}`}
                       onClick={() => toggle(key)}
                     >
                       <td className="px-2 py-2.5 text-dim">
                         {open ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
                       </td>
-                      <td className="px-2 py-2.5 font-semibold text-ink">{r.repo}</td>
+                      <td className="px-2 py-2.5">
+                        <span className="font-semibold text-ink">{r.repo}</span>
+                        <span className="block text-xs text-dim">{r.org}</span>
+                      </td>
                       {ALERT_SEVERITIES.map((s) => (
                         <td key={s} className="px-3 py-2.5 text-center tabular-nums">
                           {counts[s] > 0 ? (
-                            <span className={COUNT_STYLES[s]}>{counts[s]}</span>
+                            <span className={severityTone(s).count}>{counts[s]}</span>
                           ) : (
                             <span className="text-edge2">·</span>
                           )}
@@ -193,7 +186,7 @@ function GroupSection({ title, repos }: { title: string; repos: RepoAlerts[] }) 
                       <td className="px-3 py-2.5 text-center tabular-nums">
                         {total > 0 ? <span className="font-semibold text-ink">{total}</span> : <span className="text-ok">0</span>}
                       </td>
-                      <td className="px-3 py-2.5" onClick={(e) => e.stopPropagation()}>
+                      <td className="px-3 py-2.5 text-center" onClick={(e) => e.stopPropagation()}>
                         <a
                           href={r.securityUrl}
                           target="_blank"
@@ -208,8 +201,11 @@ function GroupSection({ title, repos }: { title: string; repos: RepoAlerts[] }) 
                   detail={
                     open ? (
                       <tr>
-                        <td />
-                        <td colSpan={8} className="bg-panel2/60 px-3 py-3">
+                        {/* Single full-width cell so the inset colour runs edge to edge. */}
+                        <td
+                          colSpan={9}
+                          className="bg-panel3 px-4 py-3 shadow-[inset_0_4px_8px_-4px_rgba(0,0,0,.6),inset_0_-4px_8px_-4px_rgba(0,0,0,.5)]"
+                        >
                           <AlertDetail repo={r} />
                         </td>
                       </tr>

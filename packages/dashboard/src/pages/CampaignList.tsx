@@ -14,7 +14,7 @@ import { teamRepoKeys, visibleCampaigns, visibleItems } from "../lib/roles";
 import { CampaignStatusBadge } from "../components/badges";
 import { ProgressBar } from "../components/ProgressBar";
 import { StatCard } from "../components/StatCard";
-import { btnPrimary, pageTitle, panel, thBase } from "../components/ui";
+import { btnPrimary, pageTitle, panel, thBase, thCenter } from "../components/ui";
 import { daysSince, timeAgo } from "../lib/format";
 
 /** Role-aware headline stats — same data, different emphasis per role. */
@@ -113,11 +113,11 @@ export function CampaignList() {
           <thead className="border-b border-edge">
             <tr>
               <th className={thBase}>Campaign</th>
-              <th className={thBase}>Status</th>
+              <th className={thCenter}>Status</th>
               <th className={thBase}>Owner</th>
-              <th className={thBase}>Repos</th>
+              <th className={thCenter}>Repos</th>
               <th className={thBase}>Progress</th>
-              <th className={thBase}>Updated</th>
+              <th className={thCenter}>Updated</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-edge/60">
@@ -126,7 +126,7 @@ export function CampaignList() {
               const pending = pendingApprovalItems(c).filter((i) => scoped.includes(i)).length;
               const attention = attentionItems(c).filter((i) => scoped.includes(i)).length;
               return (
-                <tr key={c.campaignId} className="hover:bg-panel2/70">
+                <tr key={c.campaignId} className="hover:bg-hover">
                   <td className="px-4 py-3">
                     <Link to={`/campaigns/${c.campaignId}`} className="font-semibold text-ink hover:text-accent2">
                       {c.title}
@@ -145,16 +145,16 @@ export function CampaignList() {
                       )}
                     </div>
                   </td>
-                  <td className="px-4 py-3"><CampaignStatusBadge status={c.status} /></td>
+                  <td className="px-4 py-3 text-center"><CampaignStatusBadge status={c.status} /></td>
                   <td className="px-4 py-3 text-muted">{c.owner}</td>
-                  <td className="px-4 py-3 tabular-nums text-ink/85">
+                  <td className="px-4 py-3 text-center tabular-nums text-ink/85">
                     {new Set(scoped.map((i) => `${i.org}/${i.repo}`)).size}
                     {role !== "stakeholder" && scoped.length !== c.items.length && (
                       <span className="text-xs text-dim"> / {new Set(c.items.map((i) => `${i.org}/${i.repo}`)).size} total</span>
                     )}
                   </td>
                   <td className="px-4 py-3"><ProgressBar completion={completion(c)} /></td>
-                  <td className="whitespace-nowrap px-4 py-3 text-dim">{timeAgo(c.updatedAt)}</td>
+                  <td className="whitespace-nowrap px-4 py-3 text-center text-dim">{timeAgo(c.updatedAt)}</td>
                 </tr>
               );
             })}
