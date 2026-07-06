@@ -4,6 +4,7 @@ import { readCampaign, readCampaigns, writeCampaign } from "../lib/manifest-stor
 
 interface CreateCampaignBody {
   campaignType: string;
+  category?: string;
   title: string;
   owner: string;
   repos: { repo: string; org: string }[];
@@ -39,6 +40,7 @@ export async function campaignRoutes(app: FastifyInstance) {
           additionalProperties: false,
           properties: {
             campaignType: { type: "string", minLength: 1 },
+            category: { type: "string" },
             title: { type: "string", minLength: 1 },
             owner: { type: "string", minLength: 1 },
             repos: {
@@ -56,7 +58,7 @@ export async function campaignRoutes(app: FastifyInstance) {
       },
     },
     async (req, reply) => {
-      const { campaignType, title, owner, repos, config } = req.body;
+      const { campaignType, category, title, owner, repos, config } = req.body;
       const now = new Date().toISOString();
       const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40);
       const campaignId = `camp-${slug}-${now.slice(0, 10)}-${Math.random().toString(36).slice(2, 6)}`;
@@ -65,6 +67,7 @@ export async function campaignRoutes(app: FastifyInstance) {
         schemaVersion: SCHEMA_VERSION,
         campaignId,
         campaignType,
+        ...(category ? { category } : {}),
         title,
         createdAt: now,
         updatedAt: now,

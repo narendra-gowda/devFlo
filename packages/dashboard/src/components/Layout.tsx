@@ -11,7 +11,7 @@ import {
 import type { ReactNode } from "react";
 import { ROLE_LABELS, useRole, type Role } from "../context/role";
 import { useCampaigns, useRepos } from "../api/hooks";
-import { teamRepoKeys, visibleItems } from "../lib/roles";
+import { teamRepoKeys, visibleCampaigns, visibleItems } from "../lib/roles";
 import { ATTENTION_STATUSES } from "@devflo/schema";
 import { Logo } from "./Logo";
 
@@ -57,7 +57,7 @@ function RoleSwitcher() {
           </option>
         ))}
       </select>
-      {role !== "stakeholder" && (
+      {role === "dev" && (
         <select value={team} onChange={(e) => setTeam(e.target.value)} className={selectCls} aria-label="Team">
           {TEAMS.map((t) => (
             <option key={t} value={t}>
@@ -80,7 +80,7 @@ function Sidebar() {
   let attention = 0;
   if (campaignsQ.data && reposQ.data) {
     const teamRepos = teamRepoKeys(reposQ.data, team);
-    for (const c of campaignsQ.data.campaigns) {
+    for (const c of visibleCampaigns(campaignsQ.data.campaigns, role, teamRepos)) {
       for (const i of visibleItems(c, role, teamRepos)) {
         if (i.status === "PENDING_APPROVAL") pending++;
         else if (ATTENTION_STATUSES.includes(i.status)) attention++;

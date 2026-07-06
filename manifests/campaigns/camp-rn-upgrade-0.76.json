@@ -2,6 +2,7 @@
   "schemaVersion": "1.1",
   "campaignId": "camp-rn-upgrade-0.76",
   "campaignType": "react-native-upgrade",
+  "category": "maintenance",
   "title": "React Native 0.74 -> 0.76 (new architecture default)",
   "createdAt": "2026-07-01T08:30:00Z",
   "updatedAt": "2026-07-01T08:30:00Z",

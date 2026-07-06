@@ -2,6 +2,7 @@
   "schemaVersion": "1.1",
   "campaignId": "camp-npm-dependabot-2026-06-wave2",
   "campaignType": "npm-dependabot",
+  "category": "security",
   "title": "Dependabot criticals — June wave 2 (undici, semver, lodash, jsonwebtoken, axios, ws, tmp)",
   "createdAt": "2026-06-22T09:00:00Z",
   "updatedAt": "2026-07-03T16:42:00Z",

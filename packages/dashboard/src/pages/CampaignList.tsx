@@ -33,16 +33,17 @@ function Stats({
   const attention = scoped.filter((i) => ["TESTS_FAILED", "NEEDS_ATTENTION"].includes(i.status)).length;
   const active = campaigns.filter((c) => !["COMPLETED", "FAILED"].includes(c.status)).length;
 
-  if (role === "stakeholder") {
+  if (role === "cyber") {
+    // Campaigns are already filtered to category === "security" for this role.
     const merged = scoped.filter((i) => i.status === "MERGED").length;
     const open = scoped.filter(isItemOpen);
     const oldestOpen = Math.max(0, ...open.map((i) => daysSince(i.statusUpdatedAt)));
     return (
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <StatCard label="Org-wide completion" value={`${scoped.length ? Math.round((merged / scoped.length) * 100) : 0}%`} sub={`${merged}/${scoped.length} repos merged`} tone="good" />
+        <StatCard label="Security fix completion" value={`${scoped.length ? Math.round((merged / scoped.length) * 100) : 0}%`} sub={`${merged}/${scoped.length} repos merged`} tone="good" />
         <StatCard label="Open repos" value={open.length} tone={open.length ? "warn" : "good"} sub="not yet merged or skipped" />
         <StatCard label="Oldest open (days in state)" value={oldestOpen} tone={oldestOpen > 7 ? "danger" : "default"} />
-        <StatCard label="Campaigns in flight" value={active} />
+        <StatCard label="Security campaigns in flight" value={active} />
       </div>
     );
   }
@@ -50,13 +51,17 @@ function Stats({
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
       <StatCard
-        label={role === "em" ? `Pending approvals (${team})` : "Awaiting your approval"}
+        label={role === "em" ? "Pending approvals (all teams)" : "Awaiting your approval"}
         value={pending}
         tone={pending ? "warn" : "default"}
       />
       <StatCard label="Needs attention" value={attention} tone={attention ? "danger" : "default"} sub="test failures & blockers" />
       <StatCard label="Campaigns in flight" value={active} />
-      <StatCard label="Your repos in scope" value={new Set(scoped.map((i) => `${i.org}/${i.repo}`)).size} sub={`team: ${team}`} />
+      <StatCard
+        label="Repos in scope"
+        value={new Set(scoped.map((i) => `${i.org}/${i.repo}`)).size}
+        sub={role === "em" ? "all teams" : `team: ${team}`}
+      />
     </div>
   );
 }
@@ -149,7 +154,7 @@ export function CampaignList() {
                   <td className="px-4 py-3 text-muted">{c.owner}</td>
                   <td className="px-4 py-3 text-center tabular-nums text-ink/85">
                     {new Set(scoped.map((i) => `${i.org}/${i.repo}`)).size}
-                    {role !== "stakeholder" && scoped.length !== c.items.length && (
+                    {role === "dev" && scoped.length !== c.items.length && (
                       <span className="text-xs text-dim"> / {new Set(c.items.map((i) => `${i.org}/${i.repo}`)).size} total</span>
                     )}
                   </td>
@@ -161,7 +166,11 @@ export function CampaignList() {
             {campaigns.length === 0 && (
               <tr>
                 <td colSpan={6} className="px-4 py-8 text-center text-dim">
-                  No campaigns affect {role === "stakeholder" ? "any repos" : `${team}'s repos`} yet.
+                  {role === "cyber"
+                    ? "No security campaigns yet."
+                    : role === "dev"
+                      ? `No campaigns affect ${team}'s repos yet.`
+                      : "No campaigns yet."}
                 </td>
               </tr>
             )}

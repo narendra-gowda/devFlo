@@ -15,7 +15,7 @@ Open http://localhost:5173.
 
 ```
 manifests/              source of truth ("database" for Phase 1)
-  repos.json            repo → org/team registry (role filtering joins on this)
+  repos.json            repo registry (role filtering, grouping & targeting join on this)
   campaigns/*.json      one CampaignManifest per file
 packages/
   schema/               THE contract: TS types, JSON Schema, pure derive helpers
@@ -31,6 +31,15 @@ packages/
 - **Stateless frontend.** Everything on screen derives from manifests via pure helpers in `@devflo/schema` (`completion`, `pendingApprovalItems`, ...). Only UI preference stored client-side is the mock role selection.
 - **Roles are filtered views**, not systems: Dev/EM scope items to a team via `repos.json`; Stakeholder sees all, read-only (`can.create/approve = false`). Swap point for real SSO: `context/role.tsx`.
 - **Human gate is first-class**: `ApprovalBanner` renders wherever approvals are pending; approve/skip buttons are laid out but disabled until Phase 2 async approval.
+
+## Repo registry facets
+
+Each `repos.json` entry carries flat, orthogonal labels — deliberately NOT a hierarchy, since org↔project relationships aren't uniform (one org can hold several projects; another org is a single project):
+
+- `org` — GitHub hosting/token mechanics only
+- `project` — delivery/product grouping for viewing & reporting (defaults to the org name when omitted — the "org IS the project" case)
+- `team` — ownership, approval routing, role filtering
+- `stack` — what the repo is (`react-web`, `function-app`, `react-native`, `web-server`, `terraform-template`, library, ...). **The campaign targeting selector**: a React Native upgrade campaign targets `stack=react-native` across all projects; a Node upgrade targets the Node-based stacks; template/library repos get their own stacks so campaigns can include or exclude them deliberately.
 
 ## Live security alerts
 

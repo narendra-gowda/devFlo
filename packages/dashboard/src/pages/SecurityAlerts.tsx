@@ -101,7 +101,15 @@ function AlertDetail({ repo }: { repo: RepoAlerts }) {
   );
 }
 
-function GroupSection({ title, repos }: { title: string; repos: RepoAlerts[] }) {
+function GroupSection({
+  title,
+  repos,
+  stackOf,
+}: {
+  title: string;
+  repos: RepoAlerts[];
+  stackOf: Map<string, string | undefined>;
+}) {
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
   const toggle = (key: string) => {
     const next = new Set(expanded);
@@ -165,7 +173,12 @@ function GroupSection({ title, repos }: { title: string; repos: RepoAlerts[] }) 
                       </td>
                       <td className="px-2 py-2.5">
                         <span className="font-semibold text-ink">{r.repo}</span>
-                        <span className="block text-xs text-dim">{r.org}</span>
+                        <span className="block text-xs text-dim">
+                          {r.org}
+                          {stackOf.get(`${r.org}/${r.repo}`) && (
+                            <span className="text-muted"> · {stackOf.get(`${r.org}/${r.repo}`)}</span>
+                          )}
+                        </span>
                       </td>
                       {ALERT_SEVERITIES.map((s) => (
                         <td key={s} className="px-3 py-2.5 text-center tabular-nums">
@@ -230,7 +243,13 @@ function Rows({ row, detail }: { row: React.ReactNode; detail: React.ReactNode }
   );
 }
 
-type GroupBy = "org" | "team";
+type GroupBy = "org" | "project" | "team";
+
+const GROUP_LABELS: Record<GroupBy, string> = {
+  org: "organisation",
+  project: "project",
+  team: "team",
+};
 
 export function SecurityAlerts() {
   const { role, team } = useRole();
@@ -241,8 +260,9 @@ export function SecurityAlerts() {
   const groups = useMemo(() => {
     if (!alertsQ.data || !reposQ.data) return [];
     const registry: RepoRegistry = reposQ.data;
-    const scope = role === "stakeholder" ? null : teamRepoKeys(registry, team);
-    const teamOf = new Map(registry.repos.map((r) => [`${r.org}/${r.repo}`, r.team]));
+    // Only developers are team-scoped; EM and Cyber Security see all orgs.
+    const scope = role === "dev" ? teamRepoKeys(registry, team) : null;
+    const refOf = new Map(registry.repos.map((r) => [`${r.org}/${r.repo}`, r]));
 
     const inScope = alertsQ.data.repos.filter(
       (r) => !scope || scope.has(`${r.org}/${r.repo}`)
@@ -250,7 +270,13 @@ export function SecurityAlerts() {
 
     const byGroup = new Map<string, RepoAlerts[]>();
     for (const r of inScope) {
-      const key = groupBy === "org" ? r.org : teamOf.get(`${r.org}/${r.repo}`) ?? "unmapped";
+      const ref = refOf.get(`${r.org}/${r.repo}`);
+      const key =
+        groupBy === "org"
+          ? r.org
+          : groupBy === "project"
+            ? ref?.project ?? r.org // single-project orgs: the org IS the project
+            : ref?.team ?? "unmapped";
       byGroup.set(key, [...(byGroup.get(key) ?? []), r]);
     }
 
@@ -262,6 +288,14 @@ export function SecurityAlerts() {
       .map(([title, repos]) => ({ title, repos: repos.sort((a, b) => rank(b) - rank(a)) }))
       .sort((a, b) => a.title.localeCompare(b.title));
   }, [alertsQ.data, reposQ.data, role, team, groupBy]);
+
+  const stackOf = useMemo(
+    () =>
+      new Map<string, string | undefined>(
+        (reposQ.data?.repos ?? []).map((r) => [`${r.org}/${r.repo}`, r.stack])
+      ),
+    [reposQ.data]
+  );
 
   if (alertsQ.loading || reposQ.loading) return <p className="text-muted">Loading alerts…</p>;
   if (!alertsQ.data) return <p className="text-danger">Failed to load alerts: {alertsQ.error}</p>;
@@ -285,7 +319,7 @@ export function SecurityAlerts() {
         {alertsQ.error && <span className="text-xs text-danger">last refresh failed: {alertsQ.error}</span>}
         <div className="ml-auto flex items-center gap-3">
           <div className="flex overflow-hidden rounded-[7px] border border-edge2 text-xs">
-            {(["org", "team"] as GroupBy[]).map((g) => (
+            {(["org", "project", "team"] as GroupBy[]).map((g) => (
               <button
                 key={g}
                 onClick={() => setGroupBy(g)}
@@ -293,7 +327,7 @@ export function SecurityAlerts() {
                   groupBy === g ? "bg-accent font-semibold text-[#0d0a1f]" : "bg-panel2 text-muted hover:text-ink"
                 }`}
               >
-                By {g === "org" ? "organisation" : "team"}
+                By {GROUP_LABELS[g]}
               </button>
             ))}
           </div>
@@ -309,11 +343,11 @@ export function SecurityAlerts() {
       </div>
 
       {groups.map((g) => (
-        <GroupSection key={g.title} title={g.title} repos={g.repos} />
+        <GroupSection key={g.title} title={g.title} repos={g.repos} stackOf={stackOf} />
       ))}
       {groups.length === 0 && (
         <p className="py-8 text-center text-dim">
-          No repos in scope{role !== "stakeholder" ? ` for ${team}` : ""}.
+          No repos in scope{role === "dev" ? ` for ${team}` : ""}.
         </p>
       )}
     </div>

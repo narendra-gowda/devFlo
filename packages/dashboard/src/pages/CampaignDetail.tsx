@@ -299,7 +299,7 @@ export function CampaignDetail() {
       </div>
 
       <ApprovalBanner
-        count={role === "stakeholder" ? pendingApprovalItems(campaign).length : pendingInScope}
+        count={role === "dev" ? pendingInScope : pendingApprovalItems(campaign).length}
         campaignId={campaign.campaignId}
       />
 
