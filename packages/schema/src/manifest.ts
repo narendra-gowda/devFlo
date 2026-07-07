@@ -93,6 +93,13 @@ export interface CampaignManifest {
   campaignId: string;
   /** Adapter identifier, e.g. "npm-dependabot", "node-version-upgrade". Opaque to the UI. */
   campaignType: string;
+  /**
+   * Broad campaign class declared by the adapter, e.g. "security" (dependabot,
+   * code-scanning, secret-scanning fixes) or "maintenance". Role scoping uses
+   * this — the Cyber Security role sees category === "security" — so the UI
+   * never has to recognise individual campaignTypes.
+   */
+  category?: string;
   title: string;
   createdAt: string;
   updatedAt: string;
@@ -108,11 +115,25 @@ export interface CampaignManifest {
   items: CampaignItem[];
 }
 
-/** Repo → org/team registry (manifests/repos.json). Not part of the manifest. */
+/**
+ * Repo registry entry (manifests/repos.json). Not part of the manifest.
+ *
+ * Deliberately flat, orthogonal labels — NOT a hierarchy, because the
+ * relationships aren't uniform (one org may hold several projects; another
+ * org IS a single project):
+ *  - org:     GitHub hosting/token mechanics
+ *  - project: delivery/product grouping for viewing & reporting
+ *  - team:    ownership, approval routing, role filtering
+ *  - stack:   what the repo is — the primary campaign targeting selector
+ */
 export interface RepoRef {
   repo: string;
   org: string;
   team: string;
+  /** Product/delivery grouping, e.g. "NewsFlash". Defaults to the org name when omitted. */
+  project?: string;
+  /** Tech stack / repo kind, e.g. "react-web", "function-app", "react-native", "terraform-template". */
+  stack?: string;
 }
 
 export interface RepoRegistry {

@@ -2,12 +2,13 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { FastifyInstance } from "fastify";
-import type {
-  AlertSeverity,
-  AlertsResponse,
-  CodeScanningAlert,
-  DependabotAlert,
-  RepoAlerts,
+import {
+  ALERT_SEVERITIES,
+  type AlertSeverity,
+  type AlertsResponse,
+  type CodeScanningAlert,
+  type DependabotAlert,
+  type RepoAlerts,
 } from "@devflo/schema";
 import { readRepoRegistry } from "../lib/manifest-store.js";
 
@@ -22,6 +23,31 @@ import { readRepoRegistry } from "../lib/manifest-store.js";
  * auto-refresh polling never hammers the GitHub API (12 repos × 2 endpoints
  * per refresh; a 60s TTL keeps us far below the 5k req/h PAT rate limit).
  */
+
+/**
+ * ── Per-org tokens ──────────────────────────────────────────────────────────
+ * Each GitHub org can need its own PAT. Tokens are resolved by NAMING
+ * CONVENTION, not a hardcoded mapping: for org "X" the server looks up
+ * env var GITHUB_TOKEN_<X normalised> and falls back to GITHUB_TOKEN.
+ *
+ * Normalisation: uppercase, any run of non-alphanumerics becomes "_".
+ *   ETS  → GITHUB_TOKEN_ETS
+ *   S&G  → GITHUB_TOKEN_S_G
+ *   my-org → GITHUB_TOKEN_MY_ORG
+ *
+ * Onboarding a new org = one line in .env. Orgs without any token resolve
+ * as empty (warned once at startup) instead of failing the whole view.
+ * ────────────────────────────────────────────────────────────────────────────
+ */
+export function envKeyForOrg(org: string): string {
+  return `GITHUB_TOKEN_${org.toUpperCase().replace(/[^A-Z0-9]+/g, "_").replace(/^_+|_+$/g, "")}`;
+}
+
+function tokenForOrg(org: string): string | undefined {
+  return process.env[envKeyForOrg(org)] ?? process.env.GITHUB_TOKEN;
+}
+
+const warnedOrgs = new Set<string>();
 
 const CACHE_TTL_MS = 60_000;
 const FIXTURE = path.resolve(
@@ -55,16 +81,21 @@ interface GhCodeScanningAlert {
 }
 
 async function gh<T>(url: string, token: string): Promise<T | null> {
-  const res = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      Accept: "application/vnd.github+json",
-      "X-GitHub-Api-Version": "2022-11-28",
-    },
-  });
-  // 403/404 → Dependabot/code scanning not enabled or no access: treat as empty
-  if (!res.ok) return null;
-  return (await res.json()) as T;
+  try {
+    const res = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+      },
+    });
+    // 403/404 → Dependabot/code scanning not enabled or no access: treat as empty
+    if (!res.ok) return null;
+    return (await res.json()) as T;
+  } catch {
+    // Network failure for one repo must not 500 the whole consolidated view.
+    return null;
+  }
 }
 
 async function fetchLiveRepo(org: string, repo: string, token: string): Promise<RepoAlerts> {
@@ -99,17 +130,59 @@ async function fetchLiveRepo(org: string, repo: string, token: string): Promise<
   };
 }
 
-async function loadAlerts(): Promise<AlertsResponse> {
-  const token = process.env.GITHUB_TOKEN;
-  if (token) {
-    const registry = await readRepoRegistry();
-    const repos = await Promise.all(
-      registry.repos.map((r) => fetchLiveRepo(r.org, r.repo, token))
+/**
+ * Canonical package order within each repo: critical > high > moderate > low,
+ * then package name. Sorted once per cache fill so every consumer gets the
+ * same fixed order.
+ */
+function sortAlerts(repos: RepoAlerts[]): RepoAlerts[] {
+  for (const repo of repos) {
+    repo.dependabot.sort(
+      (a, b) =>
+        ALERT_SEVERITIES.indexOf(a.severity) - ALERT_SEVERITIES.indexOf(b.severity) ||
+        a.package.localeCompare(b.package)
     );
-    return { source: "live", fetchedAt: new Date().toISOString(), repos };
   }
+  return repos;
+}
+
+function emptyRepo(org: string, repo: string): RepoAlerts {
+  return {
+    org,
+    repo,
+    dependabot: [],
+    codeScanning: [],
+    securityUrl: `https://github.com/${org}/${repo}/security/dependabot`,
+  };
+}
+
+async function loadAlerts(): Promise<AlertsResponse> {
+  const registry = await readRepoRegistry();
+
+  // Live mode when ANY token resolves for at least one registry org
+  // (org-specific GITHUB_TOKEN_<ORG> or the GITHUB_TOKEN fallback).
+  const live = registry.repos.some((r) => tokenForOrg(r.org));
+  if (live) {
+    const repos = await Promise.all(
+      registry.repos.map((r) => {
+        const token = tokenForOrg(r.org);
+        if (!token) {
+          if (!warnedOrgs.has(r.org)) {
+            warnedOrgs.add(r.org);
+            console.warn(
+              `[alerts] no token for org "${r.org}" — set ${envKeyForOrg(r.org)} (or GITHUB_TOKEN as fallback); its repos will show as empty`
+            );
+          }
+          return Promise.resolve(emptyRepo(r.org, r.repo));
+        }
+        return fetchLiveRepo(r.org, r.repo, token);
+      })
+    );
+    return { source: "live", fetchedAt: new Date().toISOString(), repos: sortAlerts(repos) };
+  }
+
   const fixture = JSON.parse(await readFile(FIXTURE, "utf8")) as { repos: RepoAlerts[] };
-  return { source: "mock", fetchedAt: new Date().toISOString(), repos: fixture.repos };
+  return { source: "mock", fetchedAt: new Date().toISOString(), repos: sortAlerts(fixture.repos) };
 }
 
 export async function alertRoutes(app: FastifyInstance) {

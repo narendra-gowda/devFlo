@@ -12,6 +12,8 @@ export interface ManifestError {
 
 export interface CreateCampaignInput {
   campaignType: string;
+  /** Broad class, e.g. "security" | "maintenance" — drives role scoping. */
+  category?: string;
   title: string;
   owner: string;
   repos: { repo: string; org: string }[];

@@ -1,16 +1,16 @@
 {
   "repos": [
-    { "repo": "payments-api", "org": "acme-core", "team": "payments-team" },
-    { "repo": "payments-worker", "org": "acme-core", "team": "payments-team" },
-    { "repo": "checkout-web", "org": "acme-core", "team": "payments-team" },
-    { "repo": "identity-service", "org": "acme-platform", "team": "platform-team" },
-    { "repo": "api-gateway", "org": "acme-platform", "team": "platform-team" },
-    { "repo": "notifications-service", "org": "acme-platform", "team": "platform-team" },
-    { "repo": "devflo-cli", "org": "acme-platform", "team": "platform-team" },
-    { "repo": "android-shell", "org": "acme-mobile", "team": "mobile-team" },
-    { "repo": "rn-customer-app", "org": "acme-mobile", "team": "mobile-team" },
-    { "repo": "rn-driver-app", "org": "acme-mobile", "team": "mobile-team" },
-    { "repo": "karate-e2e-suite", "org": "acme-labs", "team": "platform-team" },
-    { "repo": "data-export-service", "org": "acme-labs", "team": "payments-team" }
+    { "repo": "payments-api", "org": "acme-core", "team": "payments-team", "project": "payments", "stack": "web-server" },
+    { "repo": "payments-worker", "org": "acme-core", "team": "payments-team", "project": "payments", "stack": "function-app" },
+    { "repo": "checkout-web", "org": "acme-core", "team": "payments-team", "project": "checkout", "stack": "react-web" },
+    { "repo": "identity-service", "org": "acme-platform", "team": "platform-team", "project": "platform-services", "stack": "web-server" },
+    { "repo": "api-gateway", "org": "acme-platform", "team": "platform-team", "project": "platform-services", "stack": "web-server" },
+    { "repo": "notifications-service", "org": "acme-platform", "team": "platform-team", "project": "platform-services", "stack": "function-app" },
+    { "repo": "devflo-cli", "org": "acme-platform", "team": "platform-team", "project": "platform-services", "stack": "node-cli" },
+    { "repo": "android-shell", "org": "acme-mobile", "team": "mobile-team", "project": "customer-app", "stack": "android" },
+    { "repo": "rn-customer-app", "org": "acme-mobile", "team": "mobile-team", "project": "customer-app", "stack": "react-native" },
+    { "repo": "rn-driver-app", "org": "acme-mobile", "team": "mobile-team", "project": "driver-app", "stack": "react-native" },
+    { "repo": "karate-e2e-suite", "org": "acme-labs", "team": "platform-team", "stack": "karate-tests" },
+    { "repo": "data-export-service", "org": "acme-labs", "team": "payments-team", "stack": "function-app" }
   ]
 }

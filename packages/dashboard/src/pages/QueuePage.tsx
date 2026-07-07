@@ -8,7 +8,7 @@ import {
 } from "@devflo/schema";
 import { useCampaigns, useRepos } from "../api/hooks";
 import { useRole } from "../context/role";
-import { teamRepoKeys, visibleItems } from "../lib/roles";
+import { teamRepoKeys, visibleCampaigns, visibleItems } from "../lib/roles";
 import { ItemStatusBadge } from "../components/badges";
 import { pageTitle, panel, thBase, thCenter } from "../components/ui";
 import { daysSince, fmtDate } from "../lib/format";
@@ -54,7 +54,7 @@ export function QueuePage({ type }: { type: QueueType }) {
     return <p className="text-danger">Failed to load: {campaignsQ.error ?? reposQ.error}</p>;
 
   const teamRepos = teamRepoKeys(reposQ.data, team);
-  const rows: QueueRow[] = campaignsQ.data.campaigns
+  const rows: QueueRow[] = visibleCampaigns(campaignsQ.data.campaigns, role, teamRepos)
     .flatMap((campaign) =>
       visibleItems(campaign, role, teamRepos)
         .filter((item) => cfg.statuses.includes(item.status))
@@ -130,7 +130,7 @@ export function QueuePage({ type }: { type: QueueType }) {
             {rows.length === 0 && (
               <tr>
                 <td colSpan={6} className="px-4 py-8 text-center text-dim">
-                  Queue is empty{role !== "stakeholder" ? ` for ${team}` : ""}. 🎉
+                  Queue is empty{role === "dev" ? ` for ${team}` : ""}. 🎉
                 </td>
               </tr>
             )}

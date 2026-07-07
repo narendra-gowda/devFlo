@@ -18,6 +18,7 @@ export function CreateCampaign() {
   const campaignsQ = useCampaigns();
 
   const [campaignType, setCampaignType] = useState("");
+  const [category, setCategory] = useState("");
   const [title, setTitle] = useState("");
   const [owner, setOwner] = useState(team);
   const [selected, setSelected] = useState<Set<string>>(new Set());
@@ -43,7 +44,7 @@ export function CreateCampaign() {
   if (!can.create) {
     return (
       <p className="text-muted">
-        The stakeholder view is read-only. Switch role to create campaigns.{" "}
+        The Cyber Security view is read-only. Switch role to create campaigns.{" "}
         <Link to="/" className="text-accent2 hover:underline">← Back</Link>
       </p>
     );
@@ -69,7 +70,14 @@ export function CreateCampaign() {
         const [org, repo] = key.split("/");
         return { org, repo };
       });
-      const created = await api.createCampaign({ campaignType, title, owner, repos, config });
+      const created = await api.createCampaign({
+        campaignType,
+        category: category.trim() || undefined,
+        title,
+        owner,
+        repos,
+        config,
+      });
       navigate(`/campaigns/${created.campaignId}`);
     } catch (err) {
       setError((err as Error).message);
@@ -108,6 +116,24 @@ export function CreateCampaign() {
             {knownTypes.map((t) => <option key={t} value={t} />)}
           </datalist>
           <span className="mt-0.5 block text-xs text-dim">Adapter identifier — free text; the UI has no hardcoded type list.</span>
+        </label>
+
+        <label className="block text-sm">
+          <span className="font-medium text-ink">Category</span>
+          <input
+            list="campaign-categories"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            placeholder="e.g. security"
+            className={`mt-1 ${input} font-mono`}
+          />
+          <datalist id="campaign-categories">
+            <option value="security" />
+            <option value="maintenance" />
+          </datalist>
+          <span className="mt-0.5 block text-xs text-dim">
+            Broad class for role scoping — Cyber Security sees campaigns with category "security".
+          </span>
         </label>
 
         <label className="block text-sm">

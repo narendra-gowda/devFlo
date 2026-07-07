@@ -15,7 +15,7 @@ Open http://localhost:5173.
 
 ```
 manifests/              source of truth ("database" for Phase 1)
-  repos.json            repo → org/team registry (role filtering joins on this)
+  repos.json            repo registry (role filtering, grouping & targeting join on this)
   campaigns/*.json      one CampaignManifest per file
 packages/
   schema/               THE contract: TS types, JSON Schema, pure derive helpers
@@ -32,6 +32,15 @@ packages/
 - **Roles are filtered views**, not systems: Dev/EM scope items to a team via `repos.json`; Stakeholder sees all, read-only (`can.create/approve = false`). Swap point for real SSO: `context/role.tsx`.
 - **Human gate is first-class**: `ApprovalBanner` renders wherever approvals are pending; approve/skip buttons are laid out but disabled until Phase 2 async approval.
 
+## Repo registry facets
+
+Each `repos.json` entry carries flat, orthogonal labels — deliberately NOT a hierarchy, since org↔project relationships aren't uniform (one org can hold several projects; another org is a single project):
+
+- `org` — GitHub hosting/token mechanics only
+- `project` — delivery/product grouping for viewing & reporting (defaults to the org name when omitted — the "org IS the project" case)
+- `team` — ownership, approval routing, role filtering
+- `stack` — what the repo is (`react-web`, `function-app`, `react-native`, `web-server`, `terraform-template`, library, ...). **The campaign targeting selector**: a React Native upgrade campaign targets `stack=react-native` across all projects; a Node upgrade targets the Node-based stacks; template/library repos get their own stacks so campaigns can include or exclude them deliberately.
+
 ## Live security alerts
 
 `/alerts` shows consolidated Dependabot + code-scanning alerts per repo, grouped by organisation (toggle: by team), auto-refreshing every 60s. The server proxies GitHub so tokens never reach the browser:
@@ -40,6 +49,21 @@ packages/
 GITHUB_TOKEN=ghp_xxx npm run dashboard   # live mode (token needs security_events read)
 npm run dashboard                        # mock fixture: packages/server/fixtures/alerts.mock.json
 ```
+
+Alternatively put tokens in `packages/server/.env` — loaded at server boot via Node's built-in `loadEnvFile` (requires Node >= 20.12). Shell env vars take precedence. Don't commit the file; it's gitignored.
+
+**Per-org tokens** (when one PAT can't cover all orgs): resolved by naming convention, no mapping in code. For org `X` the server reads `GITHUB_TOKEN_<X>` with the org name uppercased and runs of non-alphanumerics replaced by `_`, falling back to `GITHUB_TOKEN`:
+
+```bash
+# packages/server/.env
+GITHUB_TOKEN_ETS=ghp_xxx
+GITHUB_TOKEN_RSP=ghp_yyy
+GITHUB_TOKEN_HFSS=ghp_zzz
+GITHUB_TOKEN_S_G=ghp_www     # org "S&G" — & normalises to _
+GITHUB_TOKEN=ghp_fallback    # optional: used for any org without its own token
+```
+
+Onboarding a new org = add its repos to `manifests/repos.json` + one token line here. Orgs with no resolvable token show their repos as empty (a warning is logged at startup naming the exact env var to set).
 
 Server responses are cached 60s (`CACHE_TTL_MS` in `routes/alerts.ts`) — tune together with `ALERTS_REFRESH_MS` in the dashboard. Repos where Dependabot/code scanning is disabled (GitHub returns 403/404) show as empty rather than erroring.
 

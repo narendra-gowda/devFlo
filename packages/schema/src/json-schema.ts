@@ -25,6 +25,7 @@ export const campaignManifestJsonSchema = {
     schemaVersion: { const: "1.1" },
     campaignId: { type: "string", minLength: 1 },
     campaignType: { type: "string", minLength: 1 },
+    category: { type: "string" },
     title: { type: "string", minLength: 1 },
     createdAt: { type: "string", minLength: 1 },
     updatedAt: { type: "string", minLength: 1 },
